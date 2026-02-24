@@ -11,19 +11,12 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #0f172a;
   color: #f1f5f9;
-  transition: 0.3s ease;
 }
 
 header {
   padding: 20px;
   text-align: center;
   background: #111827;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-
-h1 {
-  margin: 0;
-  font-size: 1.5rem;
 }
 
 .controls {
@@ -38,7 +31,6 @@ input, select, button {
   padding: 10px;
   border-radius: 8px;
   border: none;
-  outline: none;
 }
 
 input, select {
@@ -50,7 +42,6 @@ button {
   background: #2563eb;
   color: white;
   cursor: pointer;
-  transition: 0.3s;
 }
 
 button:hover {
@@ -72,11 +63,16 @@ th, td {
 
 th {
   background: #1e293b;
-  cursor: pointer;
 }
 
 tr:hover {
   background: #1e293b;
+}
+
+.status {
+  text-align:center;
+  margin:15px;
+  color:#facc15;
 }
 
 footer {
@@ -107,10 +103,17 @@ footer {
 <option value="id">Student ID</option>
 <option value="date">Date</option>
 </select>
-<button onclick="toggleLanguage()">BM / ENG</button>
-<button onclick="window.open('https://drive.google.com/drive/folders/1nRyiRxlpJQ9BqrwxCGpYeNdTa6pEWu09?usp=drive_link')">Official Documents</button>
-<button onclick="window.open('https://docs.google.com/spreadsheets/d/1MymTLO2DSGL5SM7MqGkyzyoAe5dYXFIfxMFxbzTgUmY/edit?usp=sharing')">⚙ Settings</button>
+
+<button onclick="window.open('https://drive.google.com/drive/folders/1nRyiRxlpJQ9BqrwxCGpYeNdTa6pEWu09?usp=drive_link')">
+Official Documents
+</button>
+
+<button onclick="window.open('https://docs.google.com/spreadsheets/d/1MymTLO2DSGL5SM7MqGkyzyoAe5dYXFIfxMFxbzTgUmY/edit')">
+⚙ Settings
+</button>
 </div>
+
+<div class="status" id="status">Loading exam data...</div>
 
 <table id="examTable">
 <thead>
@@ -134,16 +137,26 @@ Copyright © SSG 2026. All rights reserved.
 </footer>
 
 <script>
-const csvUrl = "https://docs.google.com/spreadsheets/d/1MymTLO2DSGL5SM7MqGkyzyoAe5dYXFIfxMFxbzTgUmY/edit?usp=sharing";
+
+// 🔴 REPLACE THIS WITH YOUR PUBLISHED CSV LINK
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?output=csv";
+
 let data = [];
-let currentLang = "EN";
 
 fetch(csvUrl)
-.then(res => res.text())
+.then(response => {
+  if (!response.ok) throw new Error("CSV fetch failed");
+  return response.text();
+})
 .then(text => {
-  const rows = text.split("\n").slice(1);
+  const rows = text.trim().split("\n").slice(1);
   data = rows.map(row => row.split(","));
   renderTable(data);
+  document.getElementById("status").innerText = "Data Loaded Successfully";
+})
+.catch(error => {
+  document.getElementById("status").innerText = "Error loading data. Check CSV publish settings.";
+  console.error(error);
 });
 
 function renderTable(rows){
@@ -170,16 +183,19 @@ document.getElementById("search").addEventListener("input", e=>{
 
 document.getElementById("sort").addEventListener("change", e=>{
   let sorted = [...data];
-  if(e.target.value==="name") sorted.sort((a,b)=>a[0].localeCompare(b[0]));
-  if(e.target.value==="id") sorted.sort((a,b)=>a[1].localeCompare(b[1]));
-  if(e.target.value==="date") sorted.sort((a,b)=>new Date(a[3]) - new Date(b[3]));
+
+  if(e.target.value==="name")
+    sorted.sort((a,b)=>a[0].localeCompare(b[0]));
+
+  if(e.target.value==="id")
+    sorted.sort((a,b)=>a[1].localeCompare(b[1]));
+
+  if(e.target.value==="date")
+    sorted.sort((a,b)=> new Date(a[3]) - new Date(b[3]));
+
   renderTable(sorted);
 });
 
-function toggleLanguage(){
-  currentLang = currentLang==="EN" ? "BM" : "EN";
-  alert(currentLang==="BM" ? "Bahasa Melayu Aktif" : "English Activated");
-}
 </script>
 
 </body>
