@@ -6,196 +6,303 @@
 <title>Exam Portal 2026</title>
 
 <style>
-body {
-  margin: 0;
+* { box-sizing: border-box; margin:0; padding:0; }
+
+body{
   font-family: 'Segoe UI', sans-serif;
-  background: #0f172a;
-  color: #f1f5f9;
+  background:#0f172a;
+  color:#f1f5f9;
+  overflow-x:hidden;
 }
 
-header {
-  padding: 20px;
-  text-align: center;
-  background: #111827;
+/* NAVIGATION */
+nav{
+  background:#111827;
+  padding:15px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
 }
 
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin: 20px;
+.logo-area{
+  display:flex;
+  align-items:center;
+  gap:15px;
 }
 
-input, select, button {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
+.logo{
+  width:40px;
+  height:40px;
+  background:#2563eb;
+  border-radius:8px;
 }
 
-input, select {
-  background: #1e293b;
-  color: white;
+nav h1{
+  font-size:1rem;
+  font-weight:600;
 }
 
-button {
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
+.lang-toggle{
+  cursor:pointer;
+  font-size:0.9rem;
+  opacity:0.8;
 }
 
-button:hover {
-  background: #1d4ed8;
+.container{
+  padding:40px 20px;
+  max-width:1100px;
+  margin:auto;
 }
 
-table {
-  width: 95%;
-  margin: auto;
-  border-collapse: collapse;
-  margin-bottom: 40px;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #334155;
-  text-align: center;
-}
-
-th {
-  background: #1e293b;
-}
-
-tr:hover {
-  background: #1e293b;
-}
-
-.status {
+/* SEARCH CARD */
+.search-card{
+  background:#1e293b;
+  padding:30px;
+  border-radius:16px;
   text-align:center;
-  margin:15px;
-  color:#facc15;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  animation:fadeIn 1s ease;
 }
 
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #111827;
-  font-size: 0.9rem;
+input{
+  padding:12px;
+  width:250px;
+  border-radius:8px;
+  border:none;
+  background:#0f172a;
+  color:white;
+  margin-right:10px;
+}
+
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#1d4ed8;
+  transform:translateY(-2px);
+}
+
+/* TABS */
+.tabs{
+  margin-top:40px;
+  display:flex;
+  gap:20px;
+  border-bottom:1px solid #334155;
+}
+
+.tab{
+  padding:10px;
+  cursor:pointer;
+  opacity:0.7;
+}
+
+.tab.active{
+  border-bottom:2px solid #2563eb;
+  opacity:1;
+}
+
+/* CARDS */
+.cards{
+  margin-top:30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  animation:slideUp 0.6s ease;
+}
+
+.card h3{
+  margin-bottom:10px;
+}
+
+.footer{
+  text-align:center;
+  padding:30px;
+  background:#111827;
+  margin-top:50px;
+  font-size:0.9rem;
+}
+
+.history{
+  margin-top:15px;
+  font-size:0.8rem;
+  opacity:0.7;
+}
+
+.history span{
+  cursor:pointer;
+  margin-right:10px;
+}
+
+.hidden{ display:none; }
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes slideUp{
+  from{opacity:0; transform:translateY(40px);}
+  to{opacity:1; transform:translateY(0);}
 }
 
 @media(max-width:768px){
-  table { font-size: 0.8rem; }
+  input{width:100%; margin-bottom:10px;}
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</h1>
-<h2>Exam Portal 2026</h2>
-</header>
+<nav>
+  <div class="logo-area">
+    <div class="logo"></div>
+    <h1>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</h1>
+  </div>
+  <div class="lang-toggle" onclick="toggleLang()">EN | BM</div>
+</nav>
 
-<div class="controls">
-<input type="text" id="search" placeholder="Search Name / Student ID">
-<select id="sort">
-<option value="">Sort By</option>
-<option value="name">Student Name</option>
-<option value="id">Student ID</option>
-<option value="date">Date</option>
-</select>
+<div class="container">
 
-<button onclick="window.open('GD link')">
-Official Documents
-</button>
+  <div class="search-card">
+    <h2 id="portalTitle">Exam Portal 2026</h2>
+    <br>
+    <input type="text" id="studentInput" placeholder="Enter Student ID or Name">
+    <button onclick="searchStudent()">Search</button>
 
-<button onclick="window.open('csv link')">
-⚙ Settings
-</button>
+    <div class="history" id="history"></div>
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('timetable')">Timetable</div>
+      <div class="tab" onclick="showTab('seating')">Seating</div>
+      <div class="tab" onclick="showTab('documents')">Documents</div>
+    </div>
+
+    <div id="timetable" class="cards"></div>
+    <div id="seating" class="cards hidden"></div>
+    <div id="documents" class="cards hidden"></div>
+  </div>
+
 </div>
 
-<div class="status" id="status">Loading exam data...</div>
-
-<table id="examTable">
-<thead>
-<tr>
-<th>Name</th>
-<th>ID</th>
-<th>Course</th>
-<th>Date</th>
-<th>Time</th>
-<th>Venue</th>
-<th>Hall</th>
-<th>Seat</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-
-<footer>
+<div class="footer">
 SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI<br><br>
 Copyright © SSG 2026. All rights reserved.
-</footer>
+</div>
 
 <script>
-
-// 🔴 REPLACE THIS WITH YOUR PUBLISHED CSV LINK
-const csvUrl = "csv link";
-
-let data = [];
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=0&single=true&output=csv";
+let allData = [];
+let currentLang="EN";
 
 fetch(csvUrl)
-.then(response => {
-  if (!response.ok) throw new Error("CSV fetch failed");
-  return response.text();
-})
-.then(text => {
-  const rows = text.trim().split("\n").slice(1);
-  data = rows.map(row => row.split(","));
-  renderTable(data);
-  document.getElementById("status").innerText = "Data Loaded Successfully";
-})
-.catch(error => {
-  document.getElementById("status").innerText = "Error loading data. Check CSV publish settings.";
-  console.error(error);
+.then(res=>res.text())
+.then(text=>{
+  const rows = text.split("\n").slice(1);
+  allData = rows.map(r=>r.split(","));
 });
 
-function renderTable(rows){
-  const tbody = document.querySelector("#examTable tbody");
-  tbody.innerHTML = "";
-  rows.forEach(r=>{
-    if(r.length>1){
-      const tr = document.createElement("tr");
-      r.forEach(c=>{
-        const td = document.createElement("td");
-        td.textContent = c;
-        tr.appendChild(td);
-      });
-      tbody.appendChild(tr);
-    }
+function searchStudent(){
+  const value = document.getElementById("studentInput").value.toLowerCase();
+  const results = allData.filter(r =>
+    r[0].toLowerCase().includes(value) ||
+    r[1].toLowerCase().includes(value)
+  );
+
+  if(results.length===0){
+    alert("No record found");
+    return;
+  }
+
+  localStorage.setItem("lastSearch", value);
+  loadHistory();
+
+  document.getElementById("dashboard").classList.remove("hidden");
+
+  const timetable = document.getElementById("timetable");
+  const seating = document.getElementById("seating");
+
+  timetable.innerHTML="";
+  seating.innerHTML="";
+
+  results.forEach(r=>{
+    timetable.innerHTML += `
+      <div class="card">
+        <h3>${r[3]}</h3>
+        <p>Date: ${r[4]}</p>
+        <p>Time: ${r[5]}</p>
+        <p>Venue: ${r[6]}</p>
+      </div>
+    `;
+
+    seating.innerHTML += `
+      <div class="card">
+        <h3>${r[3]}</h3>
+        <p>Hall: ${r[7]}</p>
+        <p>Seat: ${r[8]}</p>
+        <button onclick="window.open('${r[9]}')">View Seating PDF</button>
+      </div>
+    `;
   });
+
+  document.getElementById("documents").innerHTML=`
+    <div class="card">
+      <h3>Official Documents</h3>
+      <button onclick="window.open('https://drive.google.com/drive/folders/13ZETLZ-W3mq98Js55DnawxJu8Undo575?usp=drive_link')">Open Folder</button>
+    </div>
+  `;
 }
 
-document.getElementById("search").addEventListener("input", e=>{
-  const value = e.target.value.toLowerCase();
-  const filtered = data.filter(r => r.join(" ").toLowerCase().includes(value));
-  renderTable(filtered);
-});
+function showTab(tab){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  event.target.classList.add("active");
 
-document.getElementById("sort").addEventListener("change", e=>{
-  let sorted = [...data];
+  document.getElementById("timetable").classList.add("hidden");
+  document.getElementById("seating").classList.add("hidden");
+  document.getElementById("documents").classList.add("hidden");
 
-  if(e.target.value==="name")
-    sorted.sort((a,b)=>a[0].localeCompare(b[0]));
+  document.getElementById(tab).classList.remove("hidden");
+}
 
-  if(e.target.value==="id")
-    sorted.sort((a,b)=>a[1].localeCompare(b[1]));
+function loadHistory(){
+  const last = localStorage.getItem("lastSearch");
+  if(last){
+    document.getElementById("history").innerHTML=
+      "Last Search: <span onclick='reuseSearch()'>"+last+"</span>";
+  }
+}
 
-  if(e.target.value==="date")
-    sorted.sort((a,b)=> new Date(a[3]) - new Date(b[3]));
+function reuseSearch(){
+  document.getElementById("studentInput").value =
+  localStorage.getItem("lastSearch");
+  searchStudent();
+}
 
-  renderTable(sorted);
-});
+function toggleLang(){
+  currentLang = currentLang==="EN"?"BM":"EN";
+  alert(currentLang==="BM"?"Bahasa Melayu Aktif":"English Activated");
+}
 
+loadHistory();
 </script>
 
 </body>
