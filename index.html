@@ -17,14 +17,14 @@ flex-direction:column;
 min-height:100vh;
 }
 
-/* NAV */
+/* NAVIGATION */
 nav{
 display:flex;
 justify-content:space-between;
 align-items:center;
 padding:15px 40px;
-background:#111827;
-box-shadow:0 4px 20px rgba(0,0,0,0.6);
+background:#0b1120;
+border-bottom:1px solid #334155;
 position:sticky;
 top:0;
 z-index:1000;
@@ -38,6 +38,7 @@ z-index:1000;
 cursor:pointer;
 opacity:0.7;
 transition:0.3s;
+padding-bottom:5px;
 }
 .menu div:hover{opacity:1}
 .menu .active{
@@ -52,7 +53,7 @@ padding:8px 14px;
 border:none;
 border-radius:6px;
 background:silver;
-color:#111827;
+color:#0f172a;
 font-weight:600;
 cursor:pointer;
 transition:0.3s;
@@ -64,19 +65,17 @@ display:none;
 padding:60px 20px;
 max-width:1200px;
 margin:auto;
-animation:fade 0.5s ease;
+animation:fade 0.4s ease;
 }
 .active-section{display:block}
 
 .card{
 background:#1e293b;
 padding:25px;
-border-radius:16px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-margin-bottom:25px;
-transition:0.3s;
+border-radius:14px;
+box-shadow:0 8px 25px rgba(0,0,0,0.5);
+margin-bottom:20px;
 }
-.card:hover{transform:translateY(-5px)}
 
 .grid{
 display:grid;
@@ -84,7 +83,7 @@ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 gap:20px;
 }
 
-input{
+input, select, textarea{
 width:100%;
 padding:10px;
 border-radius:8px;
@@ -94,12 +93,16 @@ color:white;
 margin-top:10px;
 }
 
+textarea{min-height:100px}
+
+/* Schedule Image */
 .schedule-image{
 width:100%;
 border-radius:12px;
 box-shadow:0 10px 30px rgba(0,0,0,0.6);
 }
 
+/* Modal */
 .modal{
 display:none;
 position:fixed;
@@ -117,17 +120,24 @@ border:none;
 border-radius:12px;
 }
 
-/* FOOTER */
+/* Footer */
 footer{
 margin-top:auto;
-background:#111827;
+background:#0b1120;
 text-align:center;
 padding:30px 20px;
 font-size:0.9rem;
+border-top:1px solid #334155;
+}
+
+.history{
+font-size:0.85rem;
+opacity:0.7;
+margin-top:10px;
 }
 
 @keyframes fade{
-from{opacity:0;transform:translateY(10px)}
+from{opacity:0;transform:translateY(8px)}
 to{opacity:1;transform:translateY(0)}
 }
 </style>
@@ -142,10 +152,11 @@ to{opacity:1;transform:translateY(0)}
 </div>
 
 <div class="menu">
-<div onclick="showSection('home')" class="active">Home</div>
-<div onclick="showSection('student')">Student Portal</div>
-<div onclick="showSection('schedule')">Examination Schedule</div>
-<div onclick="showSection('guideline')">Guideline</div>
+<div onclick="showSection('home')" class="active" id="navHome">Home</div>
+<div onclick="showSection('student')" id="navStudent">Student Portal</div>
+<div onclick="showSection('schedule')" id="navSchedule">Examination Schedule</div>
+<div onclick="showSection('guideline')" id="navGuide">Guideline</div>
+<div onclick="adminLogin()">Admin</div>
 </div>
 
 <div class="right">
@@ -166,35 +177,64 @@ to{opacity:1;transform:translateY(0)}
 <!-- STUDENT -->
 <section id="student" class="section">
 <h2 id="studentTitle">Search Student</h2>
+
 <input id="studentInput">
+<select id="sortSelect">
+<option value="">Sort</option>
+<option value="name">Name</option>
+<option value="date">Exam Date</option>
+</select>
+
 <button onclick="searchStudent()" id="searchBtn">Search</button>
-<br><br>
+
+<div class="history" id="searchHistory"></div>
+<br>
 <div id="studentResults"></div>
 </section>
 
-<!-- SCHEDULE IMAGE TAB -->
+<!-- SCHEDULE -->
 <section id="schedule" class="section">
-<h2>Examination Schedule</h2>
+<h2 id="scheduleTitle">Examination Schedule</h2>
 <br>
 <img id="scheduleImage" class="schedule-image">
 </section>
 
-<!-- GUIDELINE TAB -->
+<!-- GUIDELINE -->
 <section id="guideline" class="section">
 <div class="grid">
 <div class="card">
-<h3>Diploma Guideline</h3>
+<h3 id="dipTitle">Diploma Guideline</h3>
 <button onclick="openPDF(diplomaPDF)">View</button>
 </div>
-
 <div class="card">
-<h3>Degree Guideline</h3>
+<h3 id="degTitle">Degree Guideline</h3>
 <button onclick="openPDF(degreePDF)">View</button>
 </div>
 </div>
 </section>
 
-<!-- PDF MODAL -->
+<!-- ADMIN -->
+<section id="adminPanel" class="section">
+<h2>Admin Settings</h2>
+<div class="card">
+<h3>Edit Notice</h3>
+<textarea id="noticeInput"></textarea>
+</div>
+<div class="card">
+<h3>Schedule Image Link</h3>
+<input id="scheduleInput">
+</div>
+<div class="card">
+<h3>Diploma Guideline</h3>
+<input id="diplomaInput">
+</div>
+<div class="card">
+<h3>Degree Guideline</h3>
+<input id="degreeInput">
+</div>
+<button onclick="saveAll()">Save All</button>
+</section>
+
 <div class="modal" id="pdfModal" onclick="closeModal()">
 <iframe id="pdfFrame"></iframe>
 </div>
@@ -210,29 +250,30 @@ to{opacity:1;transform:translateY(0)}
 <script>
 const studentCSV="https://docs.google.com/spreadsheets/d/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/gviz/tq?tqx=out:csv&sheet=StudentData";
 const settingsCSV="https://docs.google.com/spreadsheets/d/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/gviz/tq?tqx=out:csv&sheet=Settings";
+const apiURL="https://script.google.com/macros/s/AKfycbxYk8yTNSvd5z9zQmvmZN37bKGDio1Pc3dhjT_9_sObdW8oAcHZ9rVKickXEV1wp3ERRg/exec";
 
 let studentData=[];
 let scheduleImage="", diplomaPDF="", degreePDF="", noticeText="";
 let currentLang="EN";
 
-/* Convert Drive link to preview */
-function convertDriveLink(link){
-if(link.includes("view?usp=sharing"))
-return link.replace("view?usp=sharing","preview");
+/* DRIVE FIX */
+function convertDrive(link){
+if(!link) return "";
+if(link.includes("view")) return link.replace("view?usp=sharing","preview");
 return link;
 }
 
 /* LOAD SETTINGS */
 fetch(settingsCSV)
-.then(res=>res.text())
-.then(text=>{
-let rows=text.split("\n").slice(1);
+.then(r=>r.text())
+.then(t=>{
+let rows=t.split("\n").slice(1);
 rows.forEach(r=>{
 let c=r.split(",");
-if(c[0]=="Notice"){noticeText=c[1];}
-if(c[0]=="SchedulePDF"){scheduleImage=convertDriveLink(c[1]);}
-if(c[0]=="DiplomaGuideline"){diplomaPDF=convertDriveLink(c[1]);}
-if(c[0]=="DegreeGuideline"){degreePDF=convertDriveLink(c[1]);}
+if(c[0]=="Notice") noticeText=c[1];
+if(c[0]=="SchedulePDF") scheduleImage=convertDrive(c[1]);
+if(c[0]=="DiplomaGuideline") diplomaPDF=convertDrive(c[1]);
+if(c[0]=="DegreeGuideline") degreePDF=convertDrive(c[1]);
 });
 document.getElementById("noticeBoard").innerText=noticeText;
 document.getElementById("scheduleImage").src=scheduleImage;
@@ -240,15 +281,19 @@ document.getElementById("scheduleImage").src=scheduleImage;
 
 /* LOAD STUDENTS */
 fetch(studentCSV)
-.then(res=>res.text())
-.then(text=>{
-studentData=text.split("\n").slice(1).map(r=>r.split(","));
-});
+.then(r=>r.text())
+.then(t=>{studentData=t.split("\n").slice(1).map(r=>r.split(","));});
 
 /* SEARCH */
 function searchStudent(){
 let val=document.getElementById("studentInput").value.toLowerCase();
 let results=studentData.filter(r=>r[0].toLowerCase().includes(val)||r[1].toLowerCase().includes(val));
+
+if(document.getElementById("sortSelect").value=="name")
+results.sort((a,b)=>a[0].localeCompare(b[0]));
+if(document.getElementById("sortSelect").value=="date")
+results.sort((a,b)=>new Date(a[4])-new Date(b[4]));
+
 let container=document.getElementById("studentResults");
 container.innerHTML="";
 if(results.length==0){container.innerHTML="No record found";return;}
@@ -261,20 +306,29 @@ container.innerHTML+=`
 <p>Time: ${r[5]}</p>
 <p>Venue: ${r[6]}</p>
 <p>Seat: ${r[7]}</p>
-<button onclick="openPDF('${convertDriveLink(r[8])}')">View Seating</button>
+<button onclick="openPDF('${convertDrive(r[8])}')">View Seating</button>
 </div>`;
 });
+
+saveHistory(val);
+}
+
+/* SEARCH HISTORY */
+function saveHistory(val){
+let history=JSON.parse(localStorage.getItem("searchHistory")||"[]");
+history.unshift(val);
+history=[...new Set(history)].slice(0,5);
+localStorage.setItem("searchHistory",JSON.stringify(history));
+document.getElementById("searchHistory").innerText="Recent: "+history.join(", ");
 }
 
 /* NAV */
 function showSection(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active-section"));
 document.getElementById(id).classList.add("active-section");
-document.querySelectorAll(".menu div").forEach(m=>m.classList.remove("active"));
-event.target.classList.add("active");
 }
 
-/* PDF */
+/* MODAL */
 function openPDF(link){
 document.getElementById("pdfFrame").src=link;
 document.getElementById("pdfModal").style.display="flex";
@@ -283,13 +337,33 @@ function closeModal(){
 document.getElementById("pdfModal").style.display="none";
 }
 
-/* BILINGUAL FOOTER */
-function toggleLang(){
-currentLang=currentLang==="EN"?"BM":"EN";
-updateLang();
+/* ADMIN */
+function adminLogin(){
+let pass=prompt("Enter Admin Password:");
+if(pass==="AdminPassword"){
+showSection('adminPanel');
+document.getElementById("noticeInput").value=noticeText;
+document.getElementById("scheduleInput").value=scheduleImage;
+document.getElementById("diplomaInput").value=diplomaPDF;
+document.getElementById("degreeInput").value=degreePDF;
+}else{alert("Wrong Password");}
 }
 
-function updateLang(){
+function saveAll(){
+fetch(apiURL,{
+method:"POST",
+body:JSON.stringify({
+Notice:document.getElementById("noticeInput").value,
+SchedulePDF:document.getElementById("scheduleInput").value,
+DiplomaGuideline:document.getElementById("diplomaInput").value,
+DegreeGuideline:document.getElementById("degreeInput").value
+})
+}).then(()=>alert("Saved Successfully"));
+}
+
+/* BILINGUAL */
+function toggleLang(){
+currentLang=currentLang==="EN"?"BM":"EN";
 if(currentLang==="EN"){
 document.getElementById("footerText").innerHTML=
 "GOOD LUCK!<br>May all your efforts bring success.<br>Keep striving and never give up!";
@@ -298,7 +372,7 @@ document.getElementById("footerText").innerHTML=
 "SELAMAT MAJU JAYA!<br>SEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.<br>TERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!";
 }
 }
-updateLang();
+toggleLang();
 </script>
 
 </body>
