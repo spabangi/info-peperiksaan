@@ -6,237 +6,252 @@
 <title>Exam Portal 2026</title>
 
 <style>
-/* Global */
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#f1f5f9;}
-button{padding:8px 14px;border:none;border-radius:6px;background:#2563eb;color:white;cursor:pointer;transition:0.3s;}
-button:hover{background:#1d4ed8;}
-input,textarea{padding:8px;border-radius:6px;border:none;background:#1e293b;color:white;margin-top:5px;width:100%;}
-.section{display:none;padding:60px 20px;max-width:1100px;margin:auto;animation:fade 0.6s ease;}
-.active-section{display:block;}
-.card{background:#1e293b;padding:25px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);margin-bottom:25px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:2000;}
-.modal iframe{width:90%;height:85%;border:none;border-radius:12px;}
-footer{background:#111827;text-align:center;padding:40px 20px;margin-top:60px;font-size:0.9rem;}
-@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+body{
+  font-family:'Segoe UI',sans-serif;
+  background:#0f172a;
+  color:#cbd5e1;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
 
-/* Nav */
-nav{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:#111827;box-shadow:0 4px 20px rgba(0,0,0,0.5);position:sticky;top:0;z-index:1000;}
-.logo-area{display:flex;align-items:center;gap:15px;}
-.logo-area img{height:50px;width:auto;}
-.menu{display:flex;gap:30px;}
-.menu div{cursor:pointer;opacity:0.8;position:relative;}
-.menu div:hover{opacity:1;}
-.menu .active::after{content:"";position:absolute;bottom:-5px;left:0;width:100%;height:2px;background:#2563eb;}
-.right{display:flex;gap:20px;align-items:center;}
+/* NAV */
+nav{
+  background:#1e293b;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  border-bottom:1px solid #334155;
+}
+.logo-area{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+.logo-area img{
+  height:55px;
+}
+.menu{
+  display:flex;
+  gap:30px;
+}
+.menu div{
+  cursor:pointer;
+  color:#94a3b8;
+}
+.menu div:hover{
+  color:white;
+}
+
+/* CONTENT */
+.section{
+  display:none;
+  max-width:1100px;
+  margin:40px auto;
+  padding:0 20px;
+  animation:fade .5s ease;
+}
+.active-section{display:block}
+
+/* CARD */
+.card{
+  background:#1e293b;
+  border:1px solid #334155;
+  border-radius:14px;
+  padding:25px;
+  margin-bottom:25px;
+}
+
+/* NOTICE BOARD */
+.notice-board{
+  min-height:140px;
+  white-space:pre-line;
+  font-size:1rem;
+  line-height:1.7;
+}
+
+/* BUTTON */
+button{
+  padding:8px 14px;
+  border:none;
+  border-radius:6px;
+  background:#475569;
+  color:white;
+  cursor:pointer;
+}
+button:hover{background:#64748b}
+
+input,textarea{
+  width:100%;
+  background:#334155;
+  border:none;
+  padding:10px;
+  color:white;
+  border-radius:6px;
+  margin-top:10px;
+}
+
+/* STUDENT CARDS */
+.student-card{
+  background:#334155;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+/* FOOTER FIXED */
+footer{
+  margin-top:auto;
+  background:#1e293b;
+  text-align:center;
+  padding:25px;
+  border-top:1px solid #334155;
+  font-size:.9rem;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
 </style>
 </head>
-
 <body>
 
 <nav>
   <div class="logo-area">
-    <a href="#home">
-      <img src="https://spabangi.github.io/logo/logo.png" alt="KPTM Logo">
-    </a>
-    <h3>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</h3>
+    <img src="https://spabangi.github.io/logo/logo.png">
+    <div>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</div>
   </div>
   <div class="menu">
-    <div onclick="showSection('home')" class="active" id="menuHome">Home</div>
-    <div onclick="showSection('schedule')" id="menuSchedule">Examination Schedule</div>
-    <div onclick="showSection('guidelines')" id="menuGuidelines">Guidelines</div>
-    <div onclick="showSection('student')" id="menuStudent">Student Portal</div>
-  </div>
-  <div class="right">
-    <div onclick="toggleLang()" id="langToggle">EN | BM</div>
-    <button onclick="adminLogin()">Admin</button>
+    <div onclick="showSection('home')">Home</div>
+    <div onclick="showSection('student')">Student Portal</div>
+    <div onclick="toggleLang()">EN | BM</div>
+    <div onclick="adminLogin()">Admin</div>
   </div>
 </nav>
 
+<!-- HOME -->
 <section id="home" class="section active-section">
   <h2 id="homeTitle">Exam Portal 2026</h2>
-  <div class="card" id="noticeBoard">Loading notice...</div>
-  <div class="card admin-panel" id="adminNoticePanel" style="display:none">
-    <h3>Edit Notice Board</h3>
-    <textarea id="noticeInput" rows="3"></textarea>
+
+  <div class="card notice-board" id="noticeBoard">
+    Loading notice...
+  </div>
+
+  <div class="card" id="adminNoticePanel" style="display:none">
+    <h3>Edit Notice</h3>
+    <textarea id="noticeInput" rows="4"></textarea>
     <button onclick="saveNotice()">Save Notice</button>
   </div>
 </section>
 
-<section id="schedule" class="section">
-  <div class="card">
-    <h3 id="scheduleTitle">Master Examination Schedule</h3>
-    <button id="scheduleBtn" onclick="openPDF(schedulePDF)">View Schedule</button>
-  </div>
-  <div class="card admin-panel" id="adminSchedulePanel" style="display:none">
-    <h3>Edit Schedule PDF</h3>
-    <input type="text" id="scheduleInput">
-    <button onclick="saveSchedule()">Save Schedule</button>
-  </div>
-</section>
-
-<section id="guidelines" class="section">
-  <div class="grid">
-    <div class="card">
-      <h3 id="diplomaTitle">Diploma Students</h3>
-      <button id="diplomaBtn" onclick="openPDF(diplomaPDF)">View Guideline</button>
-    </div>
-    <div class="card">
-      <h3 id="degreeTitle">Degree Students</h3>
-      <button id="degreeBtn" onclick="openPDF(degreePDF)">View Guideline</button>
-    </div>
-  </div>
-  <div class="card admin-panel" id="adminGuidelinePanel" style="display:none">
-    <h3>Edit Guidelines PDFs</h3>
-    <input id="diplomaInput" placeholder="Diploma PDF link">
-    <input id="degreeInput" placeholder="Degree PDF link">
-    <button onclick="saveGuidelines()">Save Guidelines</button>
-  </div>
-</section>
-
+<!-- STUDENT -->
 <section id="student" class="section">
-  <h2 id="studentTitle">Search Student</h2>
+  <h2>Search Student</h2>
   <input id="studentInput" placeholder="Enter ID or Name">
-  <button id="studentBtn" onclick="searchStudent()">Search</button>
+  <button onclick="searchStudent()">Search</button>
   <div id="studentResults"></div>
 </section>
 
-<div class="modal" id="pdfModal" onclick="closeModal()">
-  <iframe id="pdfFrame"></iframe>
-</div>
-
 <footer>
-  <p id="footerMotivation"></p>
+  <div id="footerMotivation"></div>
   <br>
-  <p>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</p>
-  <br>
-  <p>Copyright © SSG 2026. All rights reserved.</p>
+  Copyright © SSG 2026. All rights reserved.
 </footer>
 
 <script>
-// Your Google Sheets CSV exports
-const studentCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=0&single=true&output=csv";
-const settingsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=1632474227&single=true&output=csv";
 
-// API endpoint you deployed
-const apiURL = "https://script.google.com/macros/s/AKfycbxYk8yTNSvd5z9zQmvmZN37bKGDio1Pc3dhjT_9_sObdW8oAcHZ9rVKickXEV1wp3ERRg/exec";
+const studentCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=0&single=true&output=csv";
+const settingsCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=1632474227&single=true&output=csv";
+const apiURL="https://script.google.com/macros/s/AKfycbxYk8yTNSvd5z9zQmvmZN37bKGDio1Pc3dhjT_9_sObdW8oAcHZ9rVKickXEV1wp3ERRg/exec";
 
-let studentData = [];
-let noticeText="", schedulePDF="", diplomaPDF="", degreePDF="";
+let noticeText="";
+let studentData=[];
 let currentLang="EN";
 
-const lang = {
-  EN: {
-    homeTitle:"Exam Portal 2026",
-    searchPlaceholder:"Enter ID or Name",
-    searchBtn:"Search",
-    studentDate:"Date", studentTime:"Time", studentVenue:"Venue", studentSeat:"Seat",
-    studentView:"View Seating",
-    footerMotivation:"Best of luck!\nMay all your efforts so far bear success.\nKeep striving and never give up!"
-  },
-  BM: {
-    homeTitle:"Portal Peperiksaan 2026",
-    searchPlaceholder:"Masukkan ID atau Nama",
-    searchBtn:"Cari",
-    studentDate:"Tarikh", studentTime:"Masa", studentVenue:"Tempat", studentSeat:"Kerusi",
-    studentView:"Lihat Tempat Duduk",
-    footerMotivation:"Selamat maju jaya!\nSemoga segala usaha anda selama ini membuahkan kejayaan.\nTeruskan berusaha dan jangan putus asa!"
-  }
+const lang={
+EN:{
+ homeTitle:"Exam Portal 2026",
+ footer:"Best of luck!\nMay all your efforts so far bear success.\nKeep striving and never give up!"
+},
+BM:{
+ homeTitle:"Portal Peperiksaan 2026",
+ footer:"Selamat maju jaya!\nSemoga segala usaha anda selama ini membuahkan kejayaan.\nTeruskan berusaha dan jangan putus asa!"
+}
 };
 
-fetch(settingsCSV).then(r=>r.text()).then(t=>{
-  let rows=t.split("\n").slice(1);
-  rows.forEach(r=>{
-    let c=r.split(",");
-    if(c[0]=="Notice") noticeText=c[1];
-    if(c[0]=="SchedulePDF") schedulePDF=c[1];
-    if(c[0]=="DiplomaGuideline") diplomaPDF=c[1];
-    if(c[0]=="DegreeGuideline") degreePDF=c[1];
-  });
-  updateTexts();
+fetch(settingsCSV)
+.then(r=>r.text())
+.then(t=>{
+ let rows=t.split("\n").slice(1);
+ rows.forEach(r=>{
+   let c=r.split(",");
+   if(c[0]=="Notice") noticeText=c[1];
+ });
+ document.getElementById("noticeBoard").innerText=noticeText;
 });
 
-fetch(studentCSV).then(r=>r.text()).then(t=>{
-  studentData=t.split("\n").slice(1).map(r=>r.split(","));
+fetch(studentCSV)
+.then(r=>r.text())
+.then(t=>{
+ studentData=t.split("\n").slice(1).map(r=>r.split(","));
 });
 
 function showSection(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active-section"));
-  document.getElementById(id).classList.add("active-section");
-  document.querySelectorAll(".menu div").forEach(m=>m.classList.remove("active"));
-  event.target.classList.add("active");
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active-section"));
+ document.getElementById(id).classList.add("active-section");
 }
-
-function openPDF(link){
-  document.getElementById("pdfFrame").src=link;
-  document.getElementById("pdfModal").style.display = "flex";
-}
-function closeModal(){document.getElementById("pdfModal").style.display="none";}
 
 function searchStudent(){
-  let q=document.getElementById("studentInput").value.toLowerCase();
-  let res=studentData.filter(r=>r[0].toLowerCase().includes(q)||r[1].toLowerCase().includes(q));
-  let out="";
-  if(res.length==0){document.getElementById("studentResults").innerText="No record found";return;}
-  res.forEach(r=>{
-    out+=`<div class="card">
-      <h3>${r[3]}</h3>
-      <p>${lang[currentLang].studentDate}: ${r[4]}</p>
-      <p>${lang[currentLang].studentTime}: ${r[5]}</p>
-      <p>${lang[currentLang].studentVenue}: ${r[6]}</p>
-      <p>${lang[currentLang].studentSeat}: ${r[7]}</p>
-      <button onclick="openPDF('${r[8]}')">${lang[currentLang].studentView}</button>
-    </div>`;
-  });
-  document.getElementById("studentResults").innerHTML=out;
+ let q=document.getElementById("studentInput").value.toLowerCase();
+ let res=studentData.filter(r=>r[0].toLowerCase().includes(q)||r[1].toLowerCase().includes(q));
+ let out="";
+ res.forEach(r=>{
+   out+=`<div class="student-card">
+     <strong>${r[3]}</strong><br>
+     Date: ${r[4]}<br>
+     Time: ${r[5]}<br>
+     Venue: ${r[6]}<br>
+     Seat: ${r[7]}
+   </div>`;
+ });
+ document.getElementById("studentResults").innerHTML=out||"No record found";
 }
 
 function adminLogin(){
-  let p=prompt("Enter Admin Password:");
-  if(p==="8527Sy@h"){ 
-    document.getElementById("adminNoticePanel").style.display="block";
-    document.getElementById("adminSchedulePanel").style.display="block";
-    document.getElementById("adminGuidelinePanel").style.display="block";
-  } else alert("Incorrect password");
+ let p=prompt("Enter Admin Password:");
+ if(p==="AdminPassword"){
+   document.getElementById("adminNoticePanel").style.display="block";
+ }
 }
 
 function saveNotice(){
-  noticeText=document.getElementById("noticeInput").value;
-  sendUpdates({Notice: noticeText});
-}
-function saveSchedule(){
-  schedulePDF=document.getElementById("scheduleInput").value;
-  sendUpdates({SchedulePDF: schedulePDF});  
-}
-function saveGuidelines(){
-  diplomaPDF=document.getElementById("diplomaInput").value;
-  degreePDF=document.getElementById("degreeInput").value;
-  sendUpdates({DiplomaGuideline: diplomaPDF, DegreeGuideline: degreePDF});
-}
-
-function sendUpdates(data){
-  fetch(apiURL, {
-    method:"POST",
-    body: JSON.stringify(data)
-  })
-  .then(res=>res.json())
-  .then(d=>alert("Saved to Google Sheet"))
-  .catch(err=>alert("Save failed"));
+ let newNotice=document.getElementById("noticeInput").value;
+ fetch(apiURL,{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({Notice:newNotice})
+ })
+ .then(res=>res.json())
+ .then(()=>{
+   noticeText=newNotice;
+   document.getElementById("noticeBoard").innerText=noticeText;
+   alert("Saved successfully");
+ })
+ .catch(()=>alert("Save failed"));
 }
 
 function toggleLang(){
-  currentLang = currentLang==="EN"? "BM":"EN";
-  updateTexts();
+ currentLang=currentLang==="EN"?"BM":"EN";
+ document.getElementById("homeTitle").innerText=lang[currentLang].homeTitle;
+ document.getElementById("footerMotivation").innerHTML=
+   lang[currentLang].footer.replace(/\n/g,"<br>");
 }
 
-function updateTexts(){
-  document.getElementById("homeTitle").innerText = lang[currentLang].homeTitle;
-  document.getElementById("studentInput").placeholder = lang[currentLang].searchPlaceholder;
-  document.getElementById("studentBtn").innerText = lang[currentLang].searchBtn;
-  document.getElementById("footerMotivation").innerHTML = lang[currentLang].footerMotivation.replace(/\n/g,"<br>");
-}
+toggleLang();
+
 </script>
-
 </body>
 </html>
