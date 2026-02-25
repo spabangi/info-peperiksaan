@@ -6,122 +6,126 @@
 <title>Exam Portal 2026</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#f1f5f9;}
-nav{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:#111827;box-shadow:0 4px 20px rgba(0,0,0,0.5);position:sticky;top:0;z-index:1000;}
-.logo-area{display:flex;align-items:center;gap:15px;}
-.logo-area img{height:40px;}
-.menu{display:flex;gap:30px;}
-.menu div{cursor:pointer;opacity:0.8;position:relative;}
-.menu div:hover{opacity:1;}
-.menu .active::after{content:"";position:absolute;bottom:-5px;left:0;width:100%;height:2px;background:#2563eb;}
-.right{display:flex;gap:20px;align-items:center;}
-button{padding:8px 14px;border:none;border-radius:6px;background:#2563eb;color:white;cursor:pointer;}
-input, textarea{padding:8px;border-radius:6px;border:none;background:#1e293b;color:white;margin-top:5px;width:100%;}
-.section{display:none;padding:60px 20px;max-width:1100px;margin:auto;animation:fade 0.6s ease;}
-.active-section{display:block;}
-.card{background:#1e293b;padding:25px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);margin-bottom:25px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:2000;}
-.modal iframe{width:90%;height:85%;border:none;border-radius:12px;}
-footer{background:#111827;text-align:center;padding:40px 20px;margin-top:60px;font-size:0.9rem;}
-.admin-panel{background:#1e293b;padding:20px;border-radius:12px;margin-top:20px;}
-.admin-panel h3{margin-bottom:10px;}
-.admin-panel input{margin-bottom:15px;}
-@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',sans-serif; background:#0f172a; color:#f1f5f9; }
+nav { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:#111827; box-shadow:0 4px 20px rgba(0,0,0,0.5); position:sticky; top:0; z-index:1000; flex-wrap:wrap; }
+.logo-area { display:flex; align-items:center; gap:15px; }
+.logo-area img { height:50px; width:auto; }
+.logo-area h3 { font-size:1.1rem; opacity:0.9; }
+.menu { display:flex; gap:30px; flex-wrap:wrap; }
+.menu div { cursor:pointer; opacity:0.8; position:relative; }
+.menu div:hover { opacity:1; }
+.menu .active::after { content:""; position:absolute; bottom:-5px; left:0; width:100%; height:2px; background:#2563eb; }
+.right { display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+button { padding:8px 14px; border:none; border-radius:6px; background:#2563eb; color:white; cursor:pointer; }
+input, textarea { padding:8px; border-radius:6px; border:none; background:#1e293b; color:white; margin-top:5px; width:100%; }
+.section { display:none; padding:60px 20px; max-width:1100px; margin:auto; animation:fade 0.6s ease; }
+.active-section { display:block; }
+.card { background:#1e293b; padding:25px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.4); margin-bottom:25px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:2000; }
+.modal iframe { width:90%; height:85%; border:none; border-radius:12px; }
+footer { background:#111827; text-align:center; padding:40px 20px; margin-top:60px; font-size:0.9rem; }
+.admin-panel { background:#1e293b; padding:20px; border-radius:12px; margin-top:20px; }
+.admin-panel h3 { margin-bottom:10px; }
+.admin-panel input, .admin-panel textarea { margin-bottom:15px; }
+@keyframes fade { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+@media(max-width:768px){ .menu { gap:15px; font-size:0.9rem; } .logo-area h3 { font-size:1rem; } }
 </style>
 </head>
-
 <body>
 
+<!-- NAVIGATION -->
 <nav>
-<div class="logo-area">
-<img src="logo.png" alt="KPTM Logo">
-<h3>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</h3>
-</div>
+  <div class="logo-area">
+    <a href="#home"><img src="https://spabangi.github.io/logo/" alt="KPTM Logo"></a>
+    <h3>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</h3>
+  </div>
 
-<div class="menu">
-<div onclick="showSection('home')" class="active" id="menuHome">Home</div>
-<div onclick="showSection('schedule')" id="menuSchedule">Examination Schedule</div>
-<div onclick="showSection('guidelines')" id="menuGuidelines">Guidelines</div>
-<div onclick="showSection('student')" id="menuStudent">Student Portal</div>
-</div>
+  <div class="menu">
+    <div onclick="showSection('home')" class="active" id="menuHome">Home</div>
+    <div onclick="showSection('schedule')" id="menuSchedule">Examination Schedule</div>
+    <div onclick="showSection('guidelines')" id="menuGuidelines">Guidelines</div>
+    <div onclick="showSection('student')" id="menuStudent">Student Portal</div>
+  </div>
 
-<div class="right">
-<div onclick="toggleLang()" id="langToggle">EN | BM</div>
-<button onclick="adminLogin()">Admin</button>
-</div>
+  <div class="right">
+    <div onclick="toggleLang()" id="langToggle">EN | BM</div>
+    <button onclick="adminLogin()">Admin</button>
+  </div>
 </nav>
 
 <!-- HOME -->
 <section id="home" class="section active-section">
-<h2 id="homeTitle">Exam Portal 2026</h2>
-<br>
-<div class="card" id="noticeBoard">Loading notice...</div>
-<div class="admin-panel" id="adminNoticePanel" style="display:none">
-<h3>Edit Notice Board</h3>
-<textarea id="noticeInput" rows="3"></textarea>
-<button onclick="saveNotice()">Save Notice</button>
-</div>
+  <h2 id="homeTitle">Exam Portal 2026</h2>
+  <br>
+  <div class="card" id="noticeBoard">Loading notice...</div>
+  <div class="admin-panel" id="adminNoticePanel" style="display:none">
+    <h3>Edit Notice Board</h3>
+    <textarea id="noticeInput" rows="3"></textarea>
+    <button onclick="saveNotice()">Save Notice</button>
+  </div>
 </section>
 
 <!-- SCHEDULE -->
 <section id="schedule" class="section">
-<div class="card">
-<h3 id="scheduleTitle">Master Examination Schedule</h3>
-<button id="scheduleBtn" onclick="openPDF(schedulePDF)">View Schedule</button>
-</div>
-<div class="admin-panel" id="adminSchedulePanel" style="display:none">
-<h3>Edit Examination Schedule PDF</h3>
-<input type="text" id="scheduleInput">
-<button onclick="saveSchedule()">Save Schedule</button>
-</div>
+  <div class="card">
+    <h3 id="scheduleTitle">Master Examination Schedule</h3>
+    <button id="scheduleBtn" onclick="openPDF(schedulePDF)">View Schedule</button>
+  </div>
+  <div class="admin-panel" id="adminSchedulePanel" style="display:none">
+    <h3>Edit Examination Schedule PDF</h3>
+    <input type="text" id="scheduleInput">
+    <button onclick="saveSchedule()">Save Schedule</button>
+  </div>
 </section>
 
 <!-- GUIDELINES -->
 <section id="guidelines" class="section">
-<div class="grid">
-<div class="card">
-<h3 id="diplomaTitle">Diploma Students</h3>
-<button id="diplomaBtn" onclick="openPDF(diplomaPDF)">View Guideline</button>
-</div>
-<div class="card">
-<h3 id="degreeTitle">Degree Students</h3>
-<button id="degreeBtn" onclick="openPDF(degreePDF)">View Guideline</button>
-</div>
-</div>
-<div class="admin-panel" id="adminGuidelinePanel" style="display:none">
-<h3>Edit Guideline PDFs</h3>
-<input type="text" id="diplomaInput" placeholder="Diploma PDF link">
-<input type="text" id="degreeInput" placeholder="Degree PDF link">
-<button onclick="saveGuidelines()">Save Guidelines</button>
-</div>
+  <div class="grid">
+    <div class="card">
+      <h3 id="diplomaTitle">Diploma Students</h3>
+      <button id="diplomaBtn" onclick="openPDF(diplomaPDF)">View Guideline</button>
+    </div>
+    <div class="card">
+      <h3 id="degreeTitle">Degree Students</h3>
+      <button id="degreeBtn" onclick="openPDF(degreePDF)">View Guideline</button>
+    </div>
+  </div>
+  <div class="admin-panel" id="adminGuidelinePanel" style="display:none">
+    <h3>Edit Guideline PDFs</h3>
+    <input type="text" id="diplomaInput" placeholder="Diploma PDF link">
+    <input type="text" id="degreeInput" placeholder="Degree PDF link">
+    <button onclick="saveGuidelines()">Save Guidelines</button>
+  </div>
 </section>
 
 <!-- STUDENT -->
 <section id="student" class="section">
-<h2 id="studentTitle">Search Student</h2>
-<br>
-<input id="studentInput" placeholder="Enter ID or Name">
-<button id="studentBtn" onclick="searchStudent()">Search</button>
-<br><br>
-<div id="studentResults"></div>
+  <h2 id="studentTitle">Search Student</h2>
+  <br>
+  <input id="studentInput" placeholder="Enter ID or Name">
+  <button id="studentBtn" onclick="searchStudent()">Search</button>
+  <br><br>
+  <div id="studentResults"></div>
 </section>
 
+<!-- PDF MODAL -->
 <div class="modal" id="pdfModal" onclick="closeModal()">
-<iframe id="pdfFrame"></iframe>
+  <iframe id="pdfFrame"></iframe>
 </div>
 
+<!-- FOOTER -->
 <footer>
-<p id="footerMotivation">
-SELAMAT MAJU JAYA!<br>
-SEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.<br>
-TERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!
-</p>
-<br>
-<p>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</p>
-<br>
-<p>Copyright © SSG 2026. All rights reserved.</p>
+  <p id="footerMotivation">
+  SELAMAT MAJU JAYA!<br>
+  SEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.<br>
+  TERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!
+  </p>
+  <br>
+  <p>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</p>
+  <br>
+  <p>Copyright © SSG 2026. All rights reserved.</p>
 </footer>
 
 <script>
@@ -130,112 +134,75 @@ const studentCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5
 const settingsCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=1632474227&single=true&output=csv";
 
 // DATA VARIABLES
-let studentData=[];
-let schedulePDF="", diplomaPDF="", degreePDF="", noticeText="";
+let studentData=[], schedulePDF="", diplomaPDF="", degreePDF="", noticeText="";
 let currentLang="EN";
 
 // LANGUAGE DICTIONARY
 const lang = {
-EN: {
-homeTitle: "Exam Portal 2026",
-notice: "Notice Board",
-viewSchedule: "View Schedule",
-diplomaGuideline: "Diploma Students",
-degreeGuideline: "Degree Students",
-viewGuideline: "View Guideline",
-searchPlaceholder: "Enter ID or Name",
-searchButton: "Search",
-studentDate: "Date",
-studentTime: "Time",
-studentVenue: "Venue",
-studentSeat: "Seat",
-studentViewSeating: "View Seating",
-footerMotivation: "Congratulations and Best Wishes!\nMay all your efforts so far bear success.\nKeep striving and never give up!"
-},
-BM: {
-homeTitle: "Portal Peperiksaan 2026",
-notice: "Papan Notis",
-viewSchedule: "Lihat Jadual",
-diplomaGuideline: "Pelajar Diploma",
-degreeGuideline: "Pelajar Ijazah",
-viewGuideline: "Lihat Garis Panduan",
-searchPlaceholder: "Masukkan ID atau Nama",
-searchButton: "Cari",
-studentDate: "Tarikh",
-studentTime: "Masa",
-studentVenue: "Tempat",
-studentSeat: "Kerusi",
-studentViewSeating: "Lihat Tempat Duduk",
-footerMotivation: "Selamat maju jaya!\nSemoga segala usaha anda selama ini membuahkan kejayaan.\nTeruskan berusaha dan jangan putus asa!"
-}
+EN:{homeTitle:"Exam Portal 2026", notice:"Notice Board", viewSchedule:"View Schedule", diplomaGuideline:"Diploma Students", degreeGuideline:"Degree Students", viewGuideline:"View Guideline", searchPlaceholder:"Enter ID or Name", searchButton:"Search", studentDate:"Date", studentTime:"Time", studentVenue:"Venue", studentSeat:"Seat", studentViewSeating:"View Seating", footerMotivation:"SELAMAT MAJU JAYA!\nSEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.\nTERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!" },
+BM:{homeTitle:"Portal Peperiksaan 2026", notice:"Papan Notis", viewSchedule:"Lihat Jadual", diplomaGuideline:"Pelajar Diploma", degreeGuideline:"Pelajar Ijazah", viewGuideline:"Lihat Garis Panduan", searchPlaceholder:"Masukkan ID atau Nama", searchButton:"Cari", studentDate:"Tarikh", studentTime:"Masa", studentVenue:"Tempat", studentSeat:"Kerusi", studentViewSeating:"Lihat Tempat Duduk", footerMotivation:"SELAMAT MAJU JAYA!\nSEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.\nTERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!" }
 };
 
 // FETCH SETTINGS
-fetch(settingsCSV)
-.then(res=>res.text())
-.then(text=>{
-let rows=text.split("\n").slice(1);
-rows.forEach(r=>{
-let cols=r.split(",");
-if(cols[0]=="Notice"){ noticeText=cols[1]; updateTexts(); }
-if(cols[0]=="SchedulePDF") schedulePDF=cols[1];
-if(cols[0]=="DiplomaGuideline") diplomaPDF=cols[1];
-if(cols[0]=="DegreeGuideline") degreePDF=cols[1];
-document.getElementById("scheduleInput").value=schedulePDF;
-document.getElementById("diplomaInput").value=diplomaPDF;
-document.getElementById("degreeInput").value=degreePDF;
-document.getElementById("noticeInput").value=noticeText;
-});
+fetch(settingsCSV).then(res=>res.text()).then(text=>{
+  let rows=text.split("\n").slice(1);
+  rows.forEach(r=>{
+    let cols=r.split(",");
+    if(cols[0]=="Notice"){ noticeText=cols[1]; document.getElementById("noticeBoard").innerText=noticeText; }
+    if(cols[0]=="SchedulePDF") schedulePDF=cols[1];
+    if(cols[0]=="DiplomaGuideline") diplomaPDF=cols[1];
+    if(cols[0]=="DegreeGuideline") degreePDF=cols[1];
+    document.getElementById("scheduleInput").value=schedulePDF;
+    document.getElementById("diplomaInput").value=diplomaPDF;
+    document.getElementById("degreeInput").value=degreePDF;
+    document.getElementById("noticeInput").value=noticeText;
+  });
 });
 
 // FETCH STUDENT DATA
-fetch(studentCSV)
-.then(res=>res.text())
-.then(text=>{
-studentData=text.split("\n").slice(1).map(r=>r.split(","));
+fetch(studentCSV).then(res=>res.text()).then(text=>{
+  studentData=text.split("\n").slice(1).map(r=>r.split(","));
 });
 
 // SECTION NAVIGATION
 function showSection(id){
-document.querySelectorAll(".section").forEach(s=>s.classList.remove("active-section"));
-document.getElementById(id).classList.add("active-section");
-document.querySelectorAll(".menu div").forEach(m=>m.classList.remove("active"));
-event.target.classList.add("active");
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active-section"));
+  document.getElementById(id).classList.add("active-section");
+  document.querySelectorAll(".menu div").forEach(m=>m.classList.remove("active"));
+  event.target.classList.add("active");
 }
 
 // PDF MODAL
-function openPDF(link){document.getElementById("pdfFrame").src=link;document.getElementById("pdfModal").style.display="flex";}
-function closeModal(){document.getElementById("pdfModal").style.display="none";}
+function openPDF(link){ document.getElementById("pdfFrame").src=link; document.getElementById("pdfModal").style.display="flex"; }
+function closeModal(){ document.getElementById("pdfModal").style.display="none"; }
 
 // SEARCH STUDENT
 function searchStudent(){
-let val=document.getElementById("studentInput").value.toLowerCase();
-let results=studentData.filter(r=>r[0].toLowerCase().includes(val)||r[1].toLowerCase().includes(val));
-let container=document.getElementById("studentResults");
-container.innerHTML="";
-if(results.length==0){ container.innerHTML="No record found"; return; }
-
-results.forEach(r=>{
-container.innerHTML+=`
-<div class="card">
-<h3>${r[3]}</h3>
-<p>${lang[currentLang].studentDate}: ${r[4]}</p>
-<p>${lang[currentLang].studentTime}: ${r[5]}</p>
-<p>${lang[currentLang].studentVenue}: ${r[6]}</p>
-<p>${lang[currentLang].studentSeat}: ${r[7]}</p>
-<button onclick="openPDF('${r[8]}')">${lang[currentLang].studentViewSeating}</button>
-</div>`;
-});
+  let val=document.getElementById("studentInput").value.toLowerCase();
+  let results=studentData.filter(r=>r[0].toLowerCase().includes(val)||r[1].toLowerCase().includes(val));
+  let container=document.getElementById("studentResults");
+  container.innerHTML="";
+  if(results.length==0){ container.innerHTML="No record found"; return; }
+  results.forEach(r=>{
+    container.innerHTML+=`<div class="card">
+      <h3>${r[3]}</h3>
+      <p>${lang[currentLang].studentDate}: ${r[4]}</p>
+      <p>${lang[currentLang].studentTime}: ${r[5]}</p>
+      <p>${lang[currentLang].studentVenue}: ${r[6]}</p>
+      <p>${lang[currentLang].studentSeat}: ${r[7]}</p>
+      <button onclick="openPDF('${r[8]}')">${lang[currentLang].studentViewSeating}</button>
+    </div>`;
+  });
 }
 
 // ADMIN LOGIN
 function adminLogin(){
-let pass=prompt("Enter Admin Password:");
-if(pass==="8527Sy@h"){ // change to your password
-document.getElementById("adminNoticePanel").style.display="block";
-document.getElementById("adminSchedulePanel").style.display="block";
-document.getElementById("adminGuidelinePanel").style.display="block";
-}else{ alert("Incorrect password"); }
+  let pass=prompt("Enter Admin Password:");
+  if(pass==="AdminPassword"){ // change this password
+    document.getElementById("adminNoticePanel").style.display="block";
+    document.getElementById("adminSchedulePanel").style.display="block";
+    document.getElementById("adminGuidelinePanel").style.display="block";
+  } else { alert("Incorrect password"); }
 }
 
 // ADMIN SAVE
@@ -244,29 +211,24 @@ function saveSchedule(){ schedulePDF=document.getElementById("scheduleInput").va
 function saveGuidelines(){ diplomaPDF=document.getElementById("diplomaInput").value; degreePDF=document.getElementById("degreeInput").value; alert("Guidelines PDFs updated. Please update Google Sheet."); }
 
 // LANGUAGE TOGGLE
-function toggleLang(){
-currentLang=currentLang==="EN"?"BM":"EN";
-updateTexts();
-}
-
+function toggleLang(){ currentLang=currentLang==="EN"?"BM":"EN"; updateTexts(); }
 function updateTexts(){
-document.getElementById("homeTitle").innerText=lang[currentLang].homeTitle;
-document.getElementById("noticeBoard").innerText=noticeText;
-document.getElementById("scheduleTitle").innerText=lang[currentLang].viewSchedule;
-document.getElementById("scheduleBtn").innerText=lang[currentLang].viewSchedule;
-document.getElementById("diplomaTitle").innerText=lang[currentLang].diplomaGuideline;
-document.getElementById("diplomaBtn").innerText=lang[currentLang].viewGuideline;
-document.getElementById("degreeTitle").innerText=lang[currentLang].degreeGuideline;
-document.getElementById("degreeBtn").innerText=lang[currentLang].viewGuideline;
-document.getElementById("studentInput").placeholder=lang[currentLang].searchPlaceholder;
-document.getElementById("studentBtn").innerText=lang[currentLang].searchButton;
-document.getElementById("footerMotivation").innerText=lang[currentLang].footerMotivation;
-document.getElementById("menuHome").innerText=currentLang==="EN"?"Home":"Utama";
-document.getElementById("menuSchedule").innerText=currentLang==="EN"?"Examination Schedule":"Jadual Peperiksaan";
-document.getElementById("menuGuidelines").innerText=currentLang==="EN"?"Guidelines":"Garis Panduan";
-document.getElementById("menuStudent").innerText=currentLang==="EN"?"Student Portal":"Portal Pelajar";
+  document.getElementById("homeTitle").innerText=lang[currentLang].homeTitle;
+  document.getElementById("noticeBoard").innerText=noticeText;
+  document.getElementById("scheduleTitle").innerText=lang[currentLang].viewSchedule;
+  document.getElementById("scheduleBtn").innerText=lang[currentLang].viewSchedule;
+  document.getElementById("diplomaTitle").innerText=lang[currentLang].diplomaGuideline;
+  document.getElementById("diplomaBtn").innerText=lang[currentLang].viewGuideline;
+  document.getElementById("degreeTitle").innerText=lang[currentLang].degreeGuideline;
+  document.getElementById("degreeBtn").innerText=lang[currentLang].viewGuideline;
+  document.getElementById("studentInput").placeholder=lang[currentLang].searchPlaceholder;
+  document.getElementById("studentBtn").innerText=lang[currentLang].searchButton;
+  document.getElementById("footerMotivation").innerText=lang[currentLang].footerMotivation;
+  document.getElementById("menuHome").innerText=currentLang==="EN"?"Home":"Utama";
+  document.getElementById("menuSchedule").innerText=currentLang==="EN"?"Examination Schedule":"Jadual Peperiksaan";
+  document.getElementById("menuGuidelines").innerText=currentLang==="EN"?"Guidelines":"Garis Panduan";
+  document.getElementById("menuStudent").innerText=currentLang==="EN"?"Student Portal":"Portal Pelajar";
 }
 </script>
-
 </body>
 </html>
