@@ -7,6 +7,7 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
 body{
 font-family:'Segoe UI',sans-serif;
 background:linear-gradient(135deg,#0f172a,#1e293b);
@@ -16,7 +17,7 @@ flex-direction:column;
 min-height:100vh;
 }
 
-/* NAVIGATION */
+/* NAV */
 nav{
 display:flex;
 justify-content:space-between;
@@ -29,43 +30,22 @@ top:0;
 z-index:1000;
 }
 
-.logo-area{
-display:flex;
-align-items:center;
-gap:15px;
-}
+.logo-area{display:flex;align-items:center;gap:15px;}
+.logo-area img{height:45px;}
 
-.logo-area img{
-height:45px;
-}
-
-.logo-area h3{
-font-weight:500;
-letter-spacing:1px;
-}
-
-.menu{
-display:flex;
-gap:30px;
-}
-
+.menu{display:flex;gap:25px;}
 .menu div{
 cursor:pointer;
 opacity:0.7;
 transition:0.3s;
 }
-
 .menu div:hover{opacity:1}
 .menu .active{
 opacity:1;
 border-bottom:2px solid silver;
 }
 
-.right{
-display:flex;
-gap:20px;
-align-items:center;
-}
+.right{display:flex;gap:20px;align-items:center;}
 
 button{
 padding:8px 14px;
@@ -88,7 +68,6 @@ animation:fade 0.5s ease;
 }
 .active-section{display:block}
 
-/* CARD */
 .card{
 background:#1e293b;
 padding:25px;
@@ -97,9 +76,7 @@ box-shadow:0 10px 30px rgba(0,0,0,0.4);
 margin-bottom:25px;
 transition:0.3s;
 }
-.card:hover{
-transform:translateY(-5px);
-}
+.card:hover{transform:translateY(-5px)}
 
 .grid{
 display:grid;
@@ -107,7 +84,7 @@ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 gap:20px;
 }
 
-input,textarea{
+input{
 width:100%;
 padding:10px;
 border-radius:8px;
@@ -117,9 +94,12 @@ color:white;
 margin-top:10px;
 }
 
-textarea{min-height:120px}
+.schedule-image{
+width:100%;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
 
-/* MODAL */
 .modal{
 display:none;
 position:fixed;
@@ -146,7 +126,6 @@ padding:30px 20px;
 font-size:0.9rem;
 }
 
-/* Animation */
 @keyframes fade{
 from{opacity:0;transform:translateY(10px)}
 to{opacity:1;transform:translateY(0)}
@@ -163,14 +142,14 @@ to{opacity:1;transform:translateY(0)}
 </div>
 
 <div class="menu">
-<div onclick="showSection('home')" class="active" id="menuHome">Home</div>
-<div onclick="showSection('student')" id="menuStudent">Student Portal</div>
-<div onclick="showSection('documents')" id="menuDocs">Documents</div>
+<div onclick="showSection('home')" class="active">Home</div>
+<div onclick="showSection('student')">Student Portal</div>
+<div onclick="showSection('schedule')">Examination Schedule</div>
+<div onclick="showSection('guideline')">Guideline</div>
 </div>
 
 <div class="right">
 <div onclick="toggleLang()" style="cursor:pointer">EN | BM</div>
-<button onclick="adminLogin()">Admin</button>
 </div>
 </nav>
 
@@ -187,20 +166,22 @@ to{opacity:1;transform:translateY(0)}
 <!-- STUDENT -->
 <section id="student" class="section">
 <h2 id="studentTitle">Search Student</h2>
-<input id="studentInput" placeholder="Enter ID or Name">
+<input id="studentInput">
 <button onclick="searchStudent()" id="searchBtn">Search</button>
 <br><br>
 <div id="studentResults"></div>
 </section>
 
-<!-- DOCUMENTS -->
-<section id="documents" class="section">
-<div class="grid">
-<div class="card">
-<h3 id="scheduleTitle">Examination Schedule</h3>
-<button onclick="openPDF(schedulePDF)">View</button>
-</div>
+<!-- SCHEDULE IMAGE TAB -->
+<section id="schedule" class="section">
+<h2>Examination Schedule</h2>
+<br>
+<img id="scheduleImage" class="schedule-image">
+</section>
 
+<!-- GUIDELINE TAB -->
+<section id="guideline" class="section">
+<div class="grid">
 <div class="card">
 <h3>Diploma Guideline</h3>
 <button onclick="openPDF(diplomaPDF)">View</button>
@@ -213,44 +194,13 @@ to{opacity:1;transform:translateY(0)}
 </div>
 </section>
 
-<!-- ADMIN PANEL -->
-<section id="adminPanel" class="section">
-<h2>Admin Settings</h2>
-
-<div class="card">
-<h3>Edit Notice</h3>
-<textarea id="noticeInput"></textarea>
-</div>
-
-<div class="card">
-<h3>Edit Schedule PDF</h3>
-<input id="scheduleInput">
-</div>
-
-<div class="card">
-<h3>Edit Diploma PDF</h3>
-<input id="diplomaInput">
-</div>
-
-<div class="card">
-<h3>Edit Degree PDF</h3>
-<input id="degreeInput">
-</div>
-
-<button onclick="saveAll()">Save All Changes</button>
-</section>
-
-<!-- MODAL -->
+<!-- PDF MODAL -->
 <div class="modal" id="pdfModal" onclick="closeModal()">
 <iframe id="pdfFrame"></iframe>
 </div>
 
 <footer>
-<p id="footerText">
-SELAMAT MAJU JAYA!<br>
-SEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.<br>
-TERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!
-</p>
+<p id="footerText"></p>
 <br>
 <p>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</p>
 <br>
@@ -258,13 +208,19 @@ TERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!
 </footer>
 
 <script>
-
 const studentCSV="https://docs.google.com/spreadsheets/d/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/gviz/tq?tqx=out:csv&sheet=StudentData";
 const settingsCSV="https://docs.google.com/spreadsheets/d/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/gviz/tq?tqx=out:csv&sheet=Settings";
-const apiURL="https://script.google.com/macros/s/AKfycbxYk8yTNSvd5z9zQmvmZN37bKGDio1Pc3dhjT_9_sObdW8oAcHZ9rVKickXEV1wp3ERRg/exec";
 
 let studentData=[];
-let schedulePDF="", diplomaPDF="", degreePDF="", noticeText="";
+let scheduleImage="", diplomaPDF="", degreePDF="", noticeText="";
+let currentLang="EN";
+
+/* Convert Drive link to preview */
+function convertDriveLink(link){
+if(link.includes("view?usp=sharing"))
+return link.replace("view?usp=sharing","preview");
+return link;
+}
 
 /* LOAD SETTINGS */
 fetch(settingsCSV)
@@ -274,11 +230,12 @@ let rows=text.split("\n").slice(1);
 rows.forEach(r=>{
 let c=r.split(",");
 if(c[0]=="Notice"){noticeText=c[1];}
-if(c[0]=="SchedulePDF"){schedulePDF=c[1];}
-if(c[0]=="DiplomaGuideline"){diplomaPDF=c[1];}
-if(c[0]=="DegreeGuideline"){degreePDF=c[1];}
+if(c[0]=="SchedulePDF"){scheduleImage=convertDriveLink(c[1]);}
+if(c[0]=="DiplomaGuideline"){diplomaPDF=convertDriveLink(c[1]);}
+if(c[0]=="DegreeGuideline"){degreePDF=convertDriveLink(c[1]);}
 });
 document.getElementById("noticeBoard").innerText=noticeText;
+document.getElementById("scheduleImage").src=scheduleImage;
 });
 
 /* LOAD STUDENTS */
@@ -304,7 +261,7 @@ container.innerHTML+=`
 <p>Time: ${r[5]}</p>
 <p>Venue: ${r[6]}</p>
 <p>Seat: ${r[7]}</p>
-<button onclick="openPDF('${r[8]}')">View Seating</button>
+<button onclick="openPDF('${convertDriveLink(r[8])}')">View Seating</button>
 </div>`;
 });
 }
@@ -317,7 +274,7 @@ document.querySelectorAll(".menu div").forEach(m=>m.classList.remove("active"));
 event.target.classList.add("active");
 }
 
-/* MODAL */
+/* PDF */
 function openPDF(link){
 document.getElementById("pdfFrame").src=link;
 document.getElementById("pdfModal").style.display="flex";
@@ -326,28 +283,22 @@ function closeModal(){
 document.getElementById("pdfModal").style.display="none";
 }
 
-/* ADMIN */
-function adminLogin(){
-let pass=prompt("Enter Admin Password:");
-if(pass==="8527Sy@h"){
-showSection('adminPanel');
-}else{alert("Wrong Password");}
+/* BILINGUAL FOOTER */
+function toggleLang(){
+currentLang=currentLang==="EN"?"BM":"EN";
+updateLang();
 }
 
-function saveAll(){
-fetch(apiURL,{
-method:"POST",
-body:JSON.stringify({
-Notice:document.getElementById("noticeInput").value,
-SchedulePDF:document.getElementById("scheduleInput").value,
-DiplomaGuideline:document.getElementById("diplomaInput").value,
-DegreeGuideline:document.getElementById("degreeInput").value
-})
-})
-.then(res=>res.text())
-.then(()=>alert("Updated Successfully"));
+function updateLang(){
+if(currentLang==="EN"){
+document.getElementById("footerText").innerHTML=
+"GOOD LUCK!<br>May all your efforts bring success.<br>Keep striving and never give up!";
+}else{
+document.getElementById("footerText").innerHTML=
+"SELAMAT MAJU JAYA!<br>SEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.<br>TERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!";
 }
-
+}
+updateLang();
 </script>
 
 </body>
