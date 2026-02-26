@@ -284,7 +284,7 @@ EXAMINATION PORTAL
 /* ================= CONFIG ================= */
 const studentCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=0&single=true&output=csv";
 const settingsCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=1632474227&single=true&output=csv";
-const scriptURL="https://script.google.com/macros/s/AKfycbytYK0dkTWjds-sss0ufka8cC6aYC2U3-e9fu-UtOvCOHTxd6Nt4O5UYhDKQjSnrimV5g/exec";
+const scriptURL="https://script.google.com/macros/s/AKfycbxYk8yTNSvd5z9zQmvmZN37bKGDio1Pc3dhjT_9_sObdW8oAcHZ9rVKickXEV1wp3ERRg/exec";
 
 /* ================= GLOBAL ================= */
 let diplomaPDF="", degreePDF="", scheduleImage="";
@@ -410,6 +410,19 @@ document.getElementById("pdfModal").style.display="flex";
 }
 function closeModal(){
 document.getElementById("pdfModal").style.display="none";
+}
+
+  /* ADMIN */
+function showAdmin(){
+document.getElementById("adminPanel").style.display="block";
+}
+
+function verifyAdmin(){
+let pass=document.getElementById("adminPassword").value;
+if(pass==="8527Sy@h"){
+document.getElementById("adminSettings").style.display="block";
+}else{
+alert("Wrong Password");
 }
 
 /* ================= ADMIN SAVE TO GOOGLE SHEET ================= */
