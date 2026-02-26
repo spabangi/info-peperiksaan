@@ -248,6 +248,19 @@ EXAMINATION PORTAL
 <input type="password" id="adminpassword" placeholder="Enter Password">
 <button onclick="verifyAdmin()">Login</button>
 
+function verifyAdmin() {
+  const passwordInput = document.getElementById("adminPassword").value;
+  const correctPassword = "1234"; // <-- change to your desired password
+    
+  if(passwordInput === correctPassword){
+      // show admin settings
+      document.getElementById("adminSettings").style.display = "block";
+      alert("Admin login successful!");
+  } else {
+      alert("Incorrect Password!");
+  }
+}
+      
 <div id="adminSettings" style="display:none">
 <textarea id="noticeInput" placeholder="Edit Notice"></textarea>
 <input id="scheduleInput" placeholder="Schedule Image Link">
