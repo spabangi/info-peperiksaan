@@ -245,7 +245,7 @@ EXAMINATION PORTAL
 <div class="admin-panel" id="adminPanel">
 <h3>Admin Panel</h3>
 
-<input type="password" id="adminPassword" placeholder="Enter Password">
+<input type="password" id="8527Sy@h" placeholder="Enter Password">
 <button onclick="verifyAdmin()">Login</button>
 
 <div id="adminSettings" style="display:none">
@@ -280,138 +280,129 @@ EXAMINATION PORTAL
 </footer>
 
 <script>
-let diplomaPDF="", degreePDF="", scheduleLink="";
+
+/* ================= CONFIG ================= */
+const studentCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=0&single=true&output=csv";
+const settingsCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=1632474227&single=true&output=csv";
+const scriptURL="https://script.google.com/macros/s/AKfycbytYK0dkTWjds-sss0ufka8cC6aYC2U3-e9fu-UtOvCOHTxd6Nt4O5UYhDKQjSnrimV5g/exec";
+
+/* ================= GLOBAL ================= */
+let diplomaPDF="", degreePDF="", scheduleImage="";
 let currentLang="EN";
 
-/* =========================
-   LOAD SAVED DATA ON START
-========================= */
-window.onload = function(){
-
-if(localStorage.getItem("scheduleLink")){
-scheduleLink = localStorage.getItem("scheduleLink");
-document.getElementById("scheduleImage").src = scheduleLink;
+/* ================= LOADING SPINNER ================= */
+function showLoading(){
+document.body.insertAdjacentHTML("beforeend",
+'<div id="loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000000aa;display:flex;align-items:center;justify-content:center;z-index:9999;"><div style="width:60px;height:60px;border:6px solid silver;border-top:6px solid transparent;border-radius:50%;animation:spin 1s linear infinite;"></div></div>');
 }
-
-if(localStorage.getItem("diplomaPDF")){
-diplomaPDF = localStorage.getItem("diplomaPDF");
+function hideLoading(){
+let l=document.getElementById("loader");
+if(l) l.remove();
 }
+document.head.insertAdjacentHTML("beforeend",
+'<style>@keyframes spin{to{transform:rotate(360deg)}}</style>');
 
-if(localStorage.getItem("degreePDF")){
-degreePDF = localStorage.getItem("degreePDF");
-}
-
-toggleLang();
-};
-
-/* =========================
-   NAVIGATION + ACTIVE TAB
-========================= */
+/* ================= NAVIGATION ================= */
 function showSection(id){
-
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active-section'));
 document.getElementById(id).classList.add('active-section');
-
-/* highlight active nav */
-document.querySelectorAll('nav div').forEach(tab=>tab.classList.remove('active'));
+document.querySelectorAll('nav div').forEach(n=>n.classList.remove('active'));
 event.target.classList.add('active');
 }
 
-/* =========================
-   LANGUAGE SYSTEM
-========================= */
+/* ================= BILINGUAL ================= */
 function toggleLang(){
 currentLang=currentLang==="EN"?"BM":"EN";
 
 if(currentLang==="BM"){
 portalTitle.innerText="PORTAL PEPERIKSAAN";
-welcomeText.innerText="Selamat Datang";
 noticeLabel.innerText="Papan Kenyataan";
 studentTitle.innerText="Portal Pelajar";
 scheduleTitle.innerText="Jadual Peperiksaan";
 dipTitle.innerText="Garis Panduan Diploma";
 degTitle.innerText="Garis Panduan Ijazah";
+
+noticeBoard.innerHTML=`
+<h3>MAKLUMAT PENTING!</h3><br>
+Untuk makluman semua pelajar program Diploma, Peperiksaan Akhir Program Diploma KPTM Sesi November 2025 akan dilaksanakan bermula dari 11 Mac 2026 hingga 6 April 2026.<br><br>
+Pelajar <b>DIWAJIBKAN</b> untuk:<br>
+1. Menjelaskan semua yuran pengajian.<br>
+2. Mencetak Slip Menduduki Peperiksaan melalui sistem SPMP.<br>
+3. Membawa Slip Menduduki Peperiksaan yang telah dicop dari Kaunter Kewangan bersama kad ID pelajar / Mykad pelajar semasa memasuki dewan peperiksaan.<br><br>
+Pelajar <b>TIDAK DIBENARKAN MASUK</b> ke dalam dewan peperiksaan sekiranya gagal membawa dokumen tersebut.<br><br>
+Untuk sebarang pertanyaan, sila ke Kaunter Seksyen Perkhidmatan Akademik.<br><br>
+Terima kasih.
+`;
+
 footerText.innerHTML="SELAMAT MAJU JAYA!<br>SEMOGA SEGALA USAHA ANDA SELAMA INI MEMBUAHKAN KEJAYAAN.<br>TERUSKAN BERUSAHA DAN JANGAN PUTUS ASA!";
 }else{
 portalTitle.innerText="EXAMINATION PORTAL";
-welcomeText.innerText="Welcome";
 noticeLabel.innerText="Notice Board";
 studentTitle.innerText="Student Portal";
 scheduleTitle.innerText="Examination Schedule";
 dipTitle.innerText="Diploma Guideline";
 degTitle.innerText="Degree Guideline";
+
+noticeBoard.innerHTML=`
+<h3>IMPORTANT NOTICE!</h3><br>
+For Diploma students, the Final Examination for November 2025 Session will be held from 11 March 2026 until 6 April 2026.<br><br>
+Students are <b>REQUIRED</b> to:<br>
+1. Settle all tuition fees.<br>
+2. Print the Examination Slip via SPMP system.<br>
+3. Bring the stamped Examination Slip together with Student ID / MyKad when entering the examination hall.<br><br>
+Students will <b>NOT BE ALLOWED</b> to enter the examination hall without these documents.<br><br>
+For enquiries, please visit Academic Service Counter.<br><br>
+Thank you.
+`;
+
 footerText.innerHTML="GOOD LUCK!<br>May all your efforts bring success.<br>Keep striving and never give up!";
 }
 }
 
-/* =========================
-   ADMIN PANEL
-========================= */
-function showAdmin(){
-document.getElementById("adminPanel").style.display="block";
+/* ================= DRIVE LINK FIX ================= */
+function convertImage(link){
+if(!link) return "";
+if(link.includes("/file/d/")){
+let id=link.split("/d/")[1].split("/")[0];
+return "https://drive.google.com/uc?export=view&id="+id;
+}
+return link;
 }
 
-function verifyAdmin(){
-let pass=document.getElementById("adminPassword").value;
-if(pass==="8527Sy@h"){
-document.getElementById("adminSettings").style.display="block";
-}else{
-alert("Wrong Password");
-}
-}
-
-/* =========================
-   SAVE SETTINGS (PERSISTENT)
-========================= */
-function saveSettings(){
-
-/* Convert image link properly */
-let rawSchedule = document.getElementById("scheduleInput").value;
-let convertedImage = convertImageLink(rawSchedule);
-
-scheduleLink = convertedImage;
-document.getElementById("scheduleImage").src = scheduleLink;
-
-/* Convert PDF links */
-diplomaPDF = convertPreviewLink(document.getElementById("diplomaInput").value);
-degreePDF = convertPreviewLink(document.getElementById("degreeInput").value);
-
-/* Save to localStorage */
-localStorage.setItem("scheduleLink", scheduleLink);
-localStorage.setItem("diplomaPDF", diplomaPDF);
-localStorage.setItem("degreePDF", degreePDF);
-
-alert("Saved Successfully (Persistent)");
-}
-
-/* =========================
-   LINK CONVERSION
-========================= */
-
-/* For PDF iframe */
-function convertPreviewLink(link){
+function convertPDF(link){
 if(!link) return "";
 if(link.includes("/view"))
 return link.replace("/view?usp=sharing","/preview");
 return link;
 }
 
-/* For IMAGE */
-function convertImageLink(link){
-if(!link) return "";
-if(link.includes("/file/d/")){
-let fileId = link.split("/d/")[1].split("/")[0];
-return "https://drive.google.com/uc?export=view&id=" + fileId;
+/* ================= LOAD SETTINGS FROM SHEET ================= */
+async function loadSettings(){
+showLoading();
+try{
+let res=await fetch(settingsCSV);
+let text=await res.text();
+let rows=text.split("\n").map(r=>r.split(","));
+scheduleImage=convertImage(rows[1][1]);
+diplomaPDF=convertPDF(rows[1][2]);
+degreePDF=convertPDF(rows[1][3]);
+document.getElementById("scheduleImage").src=scheduleImage;
+}catch(e){
+alert("Settings failed to load.");
 }
-return link;
+hideLoading();
+}
+loadSettings();
+
+/* ================= DOCUMENT VALIDATION ================= */
+function validateLink(link){
+return link && link.startsWith("https://");
 }
 
-/* =========================
-   PDF VIEWER
-========================= */
+/* ================= PDF VIEWER ================= */
 function openPDF(link){
-if(!link){
-alert("Document not inserted.");
+if(!validateLink(link)){
+alert("Document link invalid.");
 return;
 }
 document.getElementById("pdfFrame").src=link;
@@ -420,6 +411,40 @@ document.getElementById("pdfModal").style.display="flex";
 function closeModal(){
 document.getElementById("pdfModal").style.display="none";
 }
+
+/* ================= ADMIN SAVE TO GOOGLE SHEET ================= */
+function saveSettings(){
+
+let scheduleRaw=document.getElementById("scheduleInput").value;
+let diplomaRaw=document.getElementById("diplomaInput").value;
+let degreeRaw=document.getElementById("degreeInput").value;
+
+if(!validateLink(scheduleRaw) || !validateLink(diplomaRaw) || !validateLink(degreeRaw)){
+alert("Invalid link format.");
+return;
+}
+
+showLoading();
+
+fetch(scriptURL,{
+method:"POST",
+body:JSON.stringify({
+schedule:scheduleRaw,
+diploma:diplomaRaw,
+degree:degreeRaw
+})
+}).then(()=>{
+alert("Saved to Google Sheet Successfully");
+loadSettings();
+hideLoading();
+}).catch(()=>{
+alert("Failed to save.");
+hideLoading();
+});
+}
+
+toggleLang();
+
 </script>
   
 </body>
