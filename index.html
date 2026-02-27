@@ -17,25 +17,20 @@ body{
 }
 
 /* HEADER */
-<div class="header">
-  <div class="header-left">
-    <img src="https://spabangi.github.io/logo/logo.png">
-    <div>
-      <div style="font-weight:700;font-size:15px;">
-        SEKSYEN PERKHIDMATAN AKADEMIK
-      </div>
-      <div style="font-size:13px;opacity:0.8;">
-        KOLEJ POLY-TECH MARA BANGI
-      </div>
-    </div>
-  </div>
-
-  <div class="portal-title" id="portalTitle">
-    EXAMINATION PORTAL
-  </div>
-
-  <div class="lang-toggle" onclick="toggleLang()">EN | BM</div>
-</div>
+.header{
+  background:linear-gradient(90deg,#0f172a,#1e293b,#0f172a);
+  border-bottom:4px solid silver;
+  padding:18px 30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.header-left{display:flex;align-items:center;gap:15px;}
+.header-left img{height:60px;}
+.department{font-weight:700;font-size:14px;}
+.portal-title{font-size:20px;font-weight:700;text-align:center;flex:1;}
+.lang-toggle{cursor:pointer}
 
 /* NAV */
 nav{
@@ -46,24 +41,43 @@ nav{
   padding:12px;
   flex-wrap:wrap;
 }
-nav div{cursor:pointer;opacity:0.8;padding:6px 10px;border-radius:6px;transition:0.3s;}
-nav div:hover{opacity:1;background:#334155}
-nav .active{background:silver;color:black;font-weight:600}
+nav div{
+  cursor:pointer;
+  padding:6px 12px;
+  border-radius:6px;
+  transition:0.3s;
+}
+nav div:hover{background:#334155}
+nav .active{
+  background:silver;
+  color:black;
+  font-weight:600;
+  transform:scale(1.05);
+}
 
 /* LAYOUT */
 .container{display:flex;flex:1}
 .content{flex:3;padding:40px 20px}
-.section{display:none;}
-.active-section{display:block}
+.section{
+  display:none;
+  opacity:0;
+  transform:translateY(15px);
+  transition:0.4s;
+}
+.active-section{
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
 
-/* ADMIN PANEL */
+/* ADMIN */
 .admin-panel{
   flex:1;
   background:#111827;
   border-left:1px solid #334155;
   padding:25px;
-  display:none;
   overflow-y:auto;
+  display:none;
 }
 input,textarea{
   width:100%;
@@ -82,6 +96,11 @@ button{
   cursor:pointer;
   margin-top:8px;
   font-weight:600;
+  transition:0.3s;
+}
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(192,192,192,0.3);
 }
 .card{
   background:#1e293b;
@@ -89,6 +108,24 @@ button{
   border-radius:12px;
   margin-bottom:20px;
 }
+
+.notice-item{
+  background:#334155;
+  padding:12px;
+  border-radius:8px;
+  margin-top:10px;
+}
+
+/* Drag Area */
+.drop-area{
+  border:2px dashed silver;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+  margin-top:10px;
+}
+.drop-area.dragover{background:#334155}
 
 /* FOOTER */
 footer{
@@ -98,81 +135,23 @@ footer{
   border-top:1px solid #334155;
 }
 
-/* LOADER */
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.preview-img{
-  width:100%;
-  border-radius:10px;
-  margin-top:10px;
-}
-
-.notice-item{
-  background:#334155;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-}
-
 @media(max-width:768px){
   .container{flex-direction:column}
-  .admin-panel{border-left:none;border-top:1px solid #334155}
 }
 </style>
-/* Smooth Section Animation */
-.section{
-  display:none;
-  opacity:0;
-  transform:translateY(15px);
-  transition:all 0.4s ease;
-}
-.active-section{
-  display:block;
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* Button hover animation */
-button{
-  transition:all 0.3s ease;
-}
-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(192,192,192,0.3);
-}
-
-/* Nav animation */
-nav div{
-  transition:all 0.3s ease;
-}
-nav div.active{
-  background:silver;
-  color:black;
-  transform:scale(1.05);
-}
-
-/* Mobile smooth panel */
-@media(max-width:768px){
-  .admin-panel{
-    animation:slideUp 0.4s ease;
-  }
-  @keyframes slideUp{
-    from{transform:translateY(50px);opacity:0;}
-    to{transform:translateY(0);opacity:1;}
-  }
-}
 </head>
-
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="header-left">
     <img src="https://spabangi.github.io/logo/logo.png">
-    <div class="department">SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</div>
+    <div class="department">
+      SEKSYEN PERKHIDMATAN AKADEMIK<br>
+      KOLEJ POLY-TECH MARA BANGI
+    </div>
   </div>
-  <div class="portal-title" id="portalTitle">EXAMINATION PORTAL</div>
-  <div class="lang-toggle" onclick="toggleLang()">EN | BM</div>
+  <div class="portal-title">EXAMINATION PORTAL</div>
+  <div class="lang-toggle">EN | BM</div>
 </div>
 
 <nav>
@@ -188,7 +167,7 @@ nav div.active{
 <div class="content">
 
 <div id="home" class="section active-section">
-<h2 id="noticeLabel">Notice Board</h2>
+<h2>Notice Board</h2>
 <div id="noticeBoard"></div>
 </div>
 
@@ -229,92 +208,41 @@ nav div.active{
 <div id="adminContent" style="display:none">
 
 <h4>Add Notice</h4>
-<textarea id="newNotice"></textarea>
+<textarea id="noticeInput"></textarea>
 <button onclick="addNotice()">Add Notice</button>
 
-<h4>Schedule Image Upload</h4>
+<h4>Upload Schedule Image</h4>
+<div class="drop-area" id="scheduleDrop">Drag & Drop Image</div>
 
-<div id="dropArea"
-     style="border:2px dashed silver;
-            padding:20px;
-            text-align:center;
-            border-radius:10px;
-            cursor:pointer;">
-  Drag & Drop Image Here
-  <input type="file" id="scheduleUpload" hidden>
-</div>
+<h4>Upload Diploma PDF</h4>
+<input type="file" id="diplomaFile">
 
-<img id="schedulePreview" class="preview-img">
+<h4>Upload Degree PDF</h4>
+<input type="file" id="degreeFile">
 
-<h4>Diploma PDF Upload</h4>
-<input type="file" id="diplomaUpload">
-
-<h4>Degree PDF Upload</h4>
-<input type="file" id="degreeUpload">
-
-<button onclick="saveSettings()">Save All Changes</button>
+<button onclick="uploadAll()">Save All Changes</button>
 <button onclick="logout()">Logout</button>
 
 </div>
-
 </div>
 
 </div>
 
 <footer>
-<p id="footerText"></p>
-<p>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</p>
+<p>SELAMAT MAJU JAYA!<br>
+Semoga segala usaha anda selama ini membuahkan kejayaan.<br>
+Teruskan berusaha dan jangan putus asa!</p>
 <p>Copyright © SSG 2026. All rights reserved.</p>
 </footer>
 
 <script>
-  /* DRAG & DROP */
-const dropArea = document.getElementById("dropArea");
-const fileInput = document.getElementById("scheduleUpload");
-
-dropArea.addEventListener("click",()=>fileInput.click());
-
-dropArea.addEventListener("dragover",(e)=>{
-  e.preventDefault();
-  dropArea.style.background="#334155";
-});
-
-dropArea.addEventListener("dragleave",()=>{
-  dropArea.style.background="transparent";
-});
-
-dropArea.addEventListener("drop",(e)=>{
-  e.preventDefault();
-  dropArea.style.background="transparent";
-  const file=e.dataTransfer.files[0];
-  handleFile(file);
-});
-
-fileInput.addEventListener("change",(e)=>{
-  const file=e.target.files[0];
-  handleFile(file);
-});
-
-function handleFile(file){
-  if(!file.type.startsWith("image/")){
-    alert("Please upload image only");
-    return;
-  }
-
-  const reader=new FileReader();
-  reader.onload=function(e){
-    document.getElementById("schedulePreview").src=e.target.result;
-    document.getElementById("scheduleImage").src=e.target.result;
-  }
-  reader.readAsDataURL(file);
-}
-const scriptURL="https://script.google.com/macros/s/AKfycbxYk8yTNSvd5z9zQmvmZN37bKGDio1Pc3dhjT_9_sObdW8oAcHZ9rVKickXEV1wp3ERRg/exec";
-const studentCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=0&single=true&output=csv";
-
-let diplomaPDF="", degreePDF="";
+const scriptURL="https://script.google.com/macros/s/AKfycbyZuKso_CQnekE5KvqxlgDlpgAUzT63IoQ4JbPX0EoqyJCQXxBFTabgHF3Sa7FNHkpZOg/exec";
+let adminPassword="8527b@by";
+let diplomaPDF="",degreePDF="";
+let uploadedSchedule=null,uploadedDiploma=null,uploadedDegree=null;
 let notices=[];
-let adminPassword="1234"; // CHANGE THIS
 
+/* NAV */
 function showSection(e,id){
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active-section'));
 document.getElementById(id).classList.add('active-section');
@@ -322,73 +250,67 @@ document.querySelectorAll('nav div').forEach(n=>n.classList.remove('active'));
 e.target.classList.add('active');
 }
 
+/* ADMIN LOGIN */
 function toggleAdmin(){
 document.getElementById("adminPanel").style.display="block";
 }
-
 function login(){
-let pass=document.getElementById("adminPass").value;
-if(pass===8527Sy@h){
+if(document.getElementById("adminPass").value===adminPassword){
 sessionStorage.setItem("admin","true");
 document.getElementById("loginBox").style.display="none";
 document.getElementById("adminContent").style.display="block";
 }else alert("Wrong Password");
 }
-
-function logout(){
-sessionStorage.removeItem("admin");
-location.reload();
-}
-
 if(sessionStorage.getItem("admin")==="true"){
 document.getElementById("adminPanel").style.display="block";
 document.getElementById("loginBox").style.display="none";
 document.getElementById("adminContent").style.display="block";
 }
+function logout(){sessionStorage.removeItem("admin");location.reload();}
 
+/* DRAG DROP */
+const drop=document.getElementById("scheduleDrop");
+drop.addEventListener("dragover",e=>{e.preventDefault();drop.classList.add("dragover");});
+drop.addEventListener("dragleave",()=>drop.classList.remove("dragover"));
+drop.addEventListener("drop",e=>{
+e.preventDefault();
+drop.classList.remove("dragover");
+uploadedSchedule=e.dataTransfer.files[0];
+previewImage(uploadedSchedule);
+});
+function previewImage(file){
+let reader=new FileReader();
+reader.onload=e=>document.getElementById("scheduleImage").src=e.target.result;
+reader.readAsDataURL(file);
+}
+
+/* NOTICE */
 function addNotice(){
-let text=document.getElementById("newNotice").value;
+let text=document.getElementById("noticeInput").value;
 if(!text)return;
 notices.push(text);
 renderNotices();
-document.getElementById("newNotice").value="";
+document.getElementById("noticeInput").value="";
 }
-
 function renderNotices(){
 let board=document.getElementById("noticeBoard");
 board.innerHTML="";
-notices.forEach(n=>{
-board.innerHTML+=`<div class="notice-item">${n}</div>`;
-});
+notices.forEach(n=>board.innerHTML+=`<div class="notice-item">${n}</div>`);
 }
 
-function searchStudent(){
-fetch(studentCSV)
-.then(res=>res.text())
-.then(data=>{
-let rows=data.split("\n");
-let input=document.getElementById("studentInput").value.toLowerCase();
-let result="";
-rows.forEach(r=>{
-if(r.toLowerCase().includes(input)) result+=`<div class="notice-item">${r}</div>`;
-});
-document.getElementById("studentResults").innerHTML=result||"No record found";
-});
-}
+/* UPLOAD */
+async function uploadAll(){
+let formData=new FormData();
+if(uploadedSchedule)formData.append("schedule",uploadedSchedule);
+if(document.getElementById("diplomaFile").files[0])
+formData.append("diploma",document.getElementById("diplomaFile").files[0]);
+if(document.getElementById("degreeFile").files[0])
+formData.append("degree",document.getElementById("degreeFile").files[0]);
+formData.append("notices",JSON.stringify(notices));
 
-function saveSettings(){
-alert("Settings saved (connect upload to Apps Script Drive for full automation)");
+await fetch(scriptURL,{method:"POST",body:formData});
+alert("Uploaded Successfully");
 }
-
-function toggleLang(){
-let footer=document.getElementById("footerText");
-if(footer.innerHTML.includes("GOOD")){
-footer.innerHTML="SELAMAT MAJU JAYA!<br>Semoga segala usaha anda selama ini membuahkan kejayaan.<br>Teruskan berusaha dan jangan putus asa!";
-}else{
-footer.innerHTML="GOOD LUCK!<br>May your efforts bring success.<br>Keep striving and never give up!";
-}
-}
-toggleLang();
 </script>
 
 </body>
