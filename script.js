@@ -1,6 +1,6 @@
 // Replace with your Google Sheet ID
 const sheetID = "<1MymTLO2DSGL5SM7MqGkyzyoAe5dYXFIfxMFxbzTgUmY>";
-const sheetURL = `https://spreadsheets.google.com/feeds/list/${sheetID}/od6/public/values?alt=json`;
+const sheetURL = `https://spreadsheets.google.com/feeds/list/${1MymTLO2DSGL5SM7MqGkyzyoAe5dYXFIfxMFxbzTgUmY}/od6/public/values?alt=json`;
 
 async function fetchData() {
   const response = await fetch(sheetURL);
