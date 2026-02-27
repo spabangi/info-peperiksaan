@@ -17,33 +17,38 @@ body{
 }
 
 /* HEADER */
-.header{
-  background:#111827;
-  border-bottom:3px solid silver;
-  padding:15px 30px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-}
-.header-left{display:flex;align-items:center;gap:15px;}
-.header-left img{height:60px;}
-.department{font-weight:600;letter-spacing:0.5px;}
-.portal-title{text-align:center;font-size:20px;font-weight:600;flex:1;}
-.lang-toggle{cursor:pointer}
+<div class="header">
+  <div class="header-left">
+    <img src="https://spabangi.github.io/logo/logo.png">
+    <div>
+      <div style="font-weight:700;font-size:15px;">
+        SEKSYEN PERKHIDMATAN AKADEMIK
+      </div>
+      <div style="font-size:13px;opacity:0.8;">
+        KOLEJ POLY-TECH MARA BANGI
+      </div>
+    </div>
+  </div>
+
+  <div class="portal-title" id="portalTitle">
+    EXAMINATION PORTAL
+  </div>
+
+  <div class="lang-toggle" onclick="toggleLang()">EN | BM</div>
+</div>
 
 /* NAV */
 nav{
   background:#1e293b;
   display:flex;
   justify-content:center;
-  gap:30px;
+  gap:25px;
   padding:12px;
   flex-wrap:wrap;
 }
-nav div{cursor:pointer;opacity:0.8;transition:0.3s;}
-nav div:hover{opacity:1}
-nav .active{border-bottom:2px solid silver}
+nav div{cursor:pointer;opacity:0.8;padding:6px 10px;border-radius:6px;transition:0.3s;}
+nav div:hover{opacity:1;background:#334155}
+nav .active{background:silver;color:black;font-weight:600}
 
 /* LAYOUT */
 .container{display:flex;flex:1}
@@ -51,19 +56,19 @@ nav .active{border-bottom:2px solid silver}
 .section{display:none;}
 .active-section{display:block}
 
-/* ADMIN PANEL RIGHT */
+/* ADMIN PANEL */
 .admin-panel{
   flex:1;
   background:#111827;
   border-left:1px solid #334155;
   padding:25px;
   display:none;
+  overflow-y:auto;
 }
-.admin-panel h3{margin-bottom:15px;}
-input, textarea{
+input,textarea{
   width:100%;
   padding:8px;
-  margin-top:10px;
+  margin-top:8px;
   border:none;
   border-radius:6px;
   background:#0f172a;
@@ -75,7 +80,7 @@ button{
   padding:8px 14px;
   border-radius:6px;
   cursor:pointer;
-  margin-top:10px;
+  margin-top:8px;
   font-weight:600;
 }
 .card{
@@ -85,34 +90,6 @@ button{
   margin-bottom:20px;
 }
 
-/* PDF MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.85);
-  justify-content:center;
-  align-items:center;
-  z-index:2000;
-}
-.modal-content{
-  width:90%;
-  height:85%;
-  background:#1e293b;
-  border-radius:12px;
-  display:flex;
-  flex-direction:column;
-}
-.modal-header{
-  background:#0f172a;
-  padding:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.modal iframe{flex:1;border:none;border-radius:0 0 12px 12px}
-
 /* FOOTER */
 footer{
   background:#111827;
@@ -121,14 +98,69 @@ footer{
   border-top:1px solid #334155;
 }
 
-/* LOADING */
+/* LOADER */
 @keyframes spin{to{transform:rotate(360deg)}}
+
+.preview-img{
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.notice-item{
+  background:#334155;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+}
 
 @media(max-width:768px){
   .container{flex-direction:column}
   .admin-panel{border-left:none;border-top:1px solid #334155}
 }
 </style>
+/* Smooth Section Animation */
+.section{
+  display:none;
+  opacity:0;
+  transform:translateY(15px);
+  transition:all 0.4s ease;
+}
+.active-section{
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Button hover animation */
+button{
+  transition:all 0.3s ease;
+}
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(192,192,192,0.3);
+}
+
+/* Nav animation */
+nav div{
+  transition:all 0.3s ease;
+}
+nav div.active{
+  background:silver;
+  color:black;
+  transform:scale(1.05);
+}
+
+/* Mobile smooth panel */
+@media(max-width:768px){
+  .admin-panel{
+    animation:slideUp 0.4s ease;
+  }
+  @keyframes slideUp{
+    from{transform:translateY(50px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+  }
+}
 </head>
 
 <body>
@@ -143,234 +175,221 @@ footer{
   <div class="lang-toggle" onclick="toggleLang()">EN | BM</div>
 </div>
 
-<!-- NAV -->
 <nav>
-  <div onclick="showSection('home')" class="active" id="navHome">Home</div>
-  <div onclick="showSection('student')" id="navStudent">Student Portal</div>
-  <div onclick="showSection('schedule')" id="navSchedule">Schedule</div>
-  <div onclick="showSection('guideline')" id="navGuide">Guideline</div>
-  <div onclick="showAdmin()">Admin</div>
+  <div onclick="showSection(event,'home')" class="active">Home</div>
+  <div onclick="showSection(event,'student')">Student Portal</div>
+  <div onclick="showSection(event,'schedule')">Schedule</div>
+  <div onclick="showSection(event,'guideline')">Guideline</div>
+  <div onclick="toggleAdmin()">Admin</div>
 </nav>
 
 <div class="container">
-  <!-- CONTENT -->
-  <div class="content">
 
-    <div id="home" class="section active-section">
-      <h2 id="welcomeText">Welcome</h2><br>
-      <div class="card">
-        <h3 id="noticeLabel">Notice Board</h3>
-        <div id="noticeBoard"></div>
-      </div>
-    </div>
+<div class="content">
 
-    <div id="student" class="section">
-      <h2 id="studentTitle">Student Portal</h2>
-      <input id="studentInput" placeholder="Enter ID or Name">
-      <button id="searchBtn">Search</button>
-      <div id="studentResults"></div>
-    </div>
+<div id="home" class="section active-section">
+<h2 id="noticeLabel">Notice Board</h2>
+<div id="noticeBoard"></div>
+</div>
 
-    <div id="schedule" class="section">
-      <h2 id="scheduleTitle">Examination Schedule</h2><br>
-      <img id="scheduleImage" style="width:100%;border-radius:12px">
-    </div>
+<div id="student" class="section">
+<h2>Student Portal</h2>
+<input id="studentInput" placeholder="Enter ID or Name">
+<button onclick="searchStudent()">Search</button>
+<div id="studentResults"></div>
+</div>
 
-    <div id="guideline" class="section">
-      <div class="card">
-        <h3 id="dipTitle">Diploma Guideline</h3>
-        <button onclick="openPDF(diplomaPDF)">View</button>
-      </div>
-      <div class="card">
-        <h3 id="degTitle">Degree Guideline</h3>
-        <button onclick="openPDF(degreePDF)">View</button>
-      </div>
-    </div>
+<div id="schedule" class="section">
+<h2>Examination Schedule</h2>
+<img id="scheduleImage" style="width:100%;border-radius:12px">
+</div>
 
-  </div>
-
-  <!-- ADMIN RIGHT PANEL -->
-  <div class="admin-panel" id="adminPanel">
-    <h3>Admin Panel</h3>
-    <input type="password" id="adminPassword" placeholder="***">
-    <button onclick="verifyAdmin()">Login</button>
-
-    <div id="adminSettings" style="display:none">
-      <textarea id="noticeInput" placeholder="Edit Notice"></textarea>
-      <input id="scheduleInput" placeholder="Schedule Image Link">
-      <input id="diplomaInput" placeholder="Diploma PDF Link">
-      <input id="degreeInput" placeholder="Degree PDF Link">
-      <button onclick="saveSettings()">Save Changes</button>
-    </div>
-  </div>
+<div id="guideline" class="section">
+<div class="card">
+<h3>Diploma Guideline</h3>
+<button onclick="openPDF(diplomaPDF)">View</button>
+</div>
+<div class="card">
+<h3>Degree Guideline</h3>
+<button onclick="openPDF(degreePDF)">View</button>
+</div>
+</div>
 
 </div>
 
-<!-- PDF MODAL -->
-<div class="modal" id="pdfModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <span>Document Viewer</span>
-      <button onclick="closeModal()">Close</button>
-    </div>
-    <iframe id="pdfFrame"></iframe>
-  </div>
+<div class="admin-panel" id="adminPanel">
+
+<h3>Admin Panel</h3>
+
+<div id="loginBox">
+<input type="password" id="adminPass" placeholder="***">
+<button onclick="login()">Login</button>
 </div>
 
-<!-- FOOTER -->
+<div id="adminContent" style="display:none">
+
+<h4>Add Notice</h4>
+<textarea id="newNotice"></textarea>
+<button onclick="addNotice()">Add Notice</button>
+
+<h4>Schedule Image Upload</h4>
+
+<div id="dropArea"
+     style="border:2px dashed silver;
+            padding:20px;
+            text-align:center;
+            border-radius:10px;
+            cursor:pointer;">
+  Drag & Drop Image Here
+  <input type="file" id="scheduleUpload" hidden>
+</div>
+
+<img id="schedulePreview" class="preview-img">
+
+<h4>Diploma PDF Upload</h4>
+<input type="file" id="diplomaUpload">
+
+<h4>Degree PDF Upload</h4>
+<input type="file" id="degreeUpload">
+
+<button onclick="saveSettings()">Save All Changes</button>
+<button onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+</div>
+
 <footer>
-  <p id="footerText"></p><br>
-  <p>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</p><br>
-  <p>Copyright © SSG 2026. All rights reserved.</p>
+<p id="footerText"></p>
+<p>SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</p>
+<p>Copyright © SSG 2026. All rights reserved.</p>
 </footer>
 
 <script>
-/* CONFIG */
+  /* DRAG & DROP */
+const dropArea = document.getElementById("dropArea");
+const fileInput = document.getElementById("scheduleUpload");
+
+dropArea.addEventListener("click",()=>fileInput.click());
+
+dropArea.addEventListener("dragover",(e)=>{
+  e.preventDefault();
+  dropArea.style.background="#334155";
+});
+
+dropArea.addEventListener("dragleave",()=>{
+  dropArea.style.background="transparent";
+});
+
+dropArea.addEventListener("drop",(e)=>{
+  e.preventDefault();
+  dropArea.style.background="transparent";
+  const file=e.dataTransfer.files[0];
+  handleFile(file);
+});
+
+fileInput.addEventListener("change",(e)=>{
+  const file=e.target.files[0];
+  handleFile(file);
+});
+
+function handleFile(file){
+  if(!file.type.startsWith("image/")){
+    alert("Please upload image only");
+    return;
+  }
+
+  const reader=new FileReader();
+  reader.onload=function(e){
+    document.getElementById("schedulePreview").src=e.target.result;
+    document.getElementById("scheduleImage").src=e.target.result;
+  }
+  reader.readAsDataURL(file);
+}
 const scriptURL="https://script.google.com/macros/s/AKfycbxYk8yTNSvd5z9zQmvmZN37bKGDio1Pc3dhjT_9_sObdW8oAcHZ9rVKickXEV1wp3ERRg/exec";
-const settingsCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9zQZo7/pub?gid=0&single=true&output=csv";
+const studentCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTy6Guhhcg2p5IL_ZBTADjALjcvlIcJs_gIKhxmEhUqd7HZ2aoUfr0Y6KsKn_owG3R34MNWXp9qZo7/pub?gid=0&single=true&output=csv";
 
-let diplomaPDF="", degreePDF="", scheduleImage="";
-let currentLang="EN";
+let diplomaPDF="", degreePDF="";
+let notices=[];
+let adminPassword="1234"; // CHANGE THIS
 
-/* LOADING */
-function showLoading(){
-document.body.insertAdjacentHTML("beforeend",
-'<div id="loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000000aa;display:flex;align-items:center;justify-content:center;z-index:9999;"><div style="width:60px;height:60px;border:6px solid silver;border-top:6px solid transparent;border-radius:50%;animation:spin 1s linear infinite;"></div></div>');
-}
-function hideLoading(){
-let l=document.getElementById("loader");
-if(l) l.remove();
+function showSection(e,id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active-section'));
+document.getElementById(id).classList.add('active-section');
+document.querySelectorAll('nav div').forEach(n=>n.classList.remove('active'));
+e.target.classList.add('active');
 }
 
-/* NAVIGATION */
-function showSection(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active-section'));
-  document.getElementById(id).classList.add('active-section');
-  document.querySelectorAll('nav div').forEach(n=>n.classList.remove('active'));
-  event.target.classList.add('active');
+function toggleAdmin(){
+document.getElementById("adminPanel").style.display="block";
 }
 
-/* LANGUAGE */
-function toggleLang(){
-  currentLang=currentLang==="EN"?"BM":"EN";
-
-  if(currentLang==="BM"){
-    portalTitle.innerText="PORTAL PEPERIKSAAN";
-    noticeLabel.innerText="Papan Kenyataan";
-    studentTitle.innerText="Portal Pelajar";
-    scheduleTitle.innerText="Jadual Peperiksaan";
-    dipTitle.innerText="Garis Panduan Diploma";
-    degTitle.innerText="Garis Panduan Ijazah";
-
-    noticeBoard.innerHTML=`
-<h3>MAKLUMAT PENTING!</h3><br>
-Untuk makluman semua pelajar program Diploma, Peperiksaan Akhir Program Diploma KPTM Sesi November 2025 akan dilaksanakan bermula dari 11 Mac 2026 hingga 6 April 2026.<br><br>
-Pelajar <b>DIWAJIBKAN</b> untuk:<br>
-1. Menjelaskan semua yuran pengajian.<br>
-2. Mencetak Slip Menduduki Peperiksaan melalui sistem SPMP.<br>
-3. Membawa Slip Menduduki Peperiksaan yang telah dicop dari Kaunter Kewangan bersama kad ID pelajar / MyKad.<br><br>
-Pelajar <b>TIDAK DIBENARKAN MASUK</b> tanpa dokumen tersebut.<br><br>
-Terima kasih.
-`;
-    footerText.innerHTML="SELAMAT MAJU JAYA!<br>Semoga segala usaha anda selama ini membuahkan kejayaan.<br>Teruskan berusaha dan jangan putus asa!";
-  } else {
-    portalTitle.innerText="EXAMINATION PORTAL";
-    noticeLabel.innerText="Notice Board";
-    studentTitle.innerText="Student Portal";
-    scheduleTitle.innerText="Examination Schedule";
-    dipTitle.innerText="Diploma Guideline";
-    degTitle.innerText="Degree Guideline";
-
-    noticeBoard.innerHTML=`
-<h3>IMPORTANT NOTICE!</h3><br>
-For Diploma students, the Final Examination for November 2025 Session will be held from 11 March 2026 until 6 April 2026.<br><br>
-Students are <b>REQUIRED</b> to:<br>
-1. Settle all tuition fees.<br>
-2. Print the Examination Slip via SPMP system.<br>
-3. Bring the stamped Examination Slip together with Student ID / MyKad.<br><br>
-Students <b>WILL NOT BE ALLOWED</b> to enter the hall without documents.<br><br>
-Thank you.
-`;
-    footerText.innerHTML="GOOD LUCK!<br>May all your efforts bring success.<br>Keep striving and never give up!";
-  }
+function login(){
+let pass=document.getElementById("adminPass").value;
+if(pass===8527Sy@h){
+sessionStorage.setItem("admin","true");
+document.getElementById("loginBox").style.display="none";
+document.getElementById("adminContent").style.display="block";
+}else alert("Wrong Password");
 }
 
-/* DRIVE LINK CONVERT */
-function convertImage(link){
-  if(!link) return "";
-  if(link.includes("/file/d/")){
-    let id=link.split("/d/")[1].split("/")[0];
-    return "https://drive.google.com/uc?export=view&id="+id;
-  }
-  return link;
-}
-function convertPDF(link){
-  if(!link) return "";
-  if(link.includes("/view"))
-    return link.replace("/view?usp=sharing","/preview");
-  return link;
+function logout(){
+sessionStorage.removeItem("admin");
+location.reload();
 }
 
-/* LOAD SETTINGS */
-async function loadSettings(){
-  showLoading();
-  try{
-    let res=await fetch(settingsCSV);
-    let text=await res.text();
-    let rows=text.split("\n").map(r=>r.split(","));
-    scheduleImage=convertImage(rows[1][1]);
-    diplomaPDF=convertPDF(rows[1][2]);
-    degreePDF=convertPDF(rows[1][3]);
-    document.getElementById("scheduleImage").src=scheduleImage;
-    document.getElementById("scheduleInput").value=rows[1][1];
-    document.getElementById("diplomaInput").value=rows[1][2];
-    document.getElementById("degreeInput").value=rows[1][3];
-  } catch(e){
-    alert("Settings failed to load.");
-  }
-  hideLoading();
-}
-loadSettings();
-
-/* ADMIN LOGIN */
-function showAdmin(){
-  document.getElementById("adminPanel").style.display="block";
-}
-function verifyAdmin(){
-  let pass=document.getElementById("adminPassword").value;
-  const correct="1234"; // set your password
-  if(pass===correct){
-    document.getElementById("adminSettings").style.display="block";
-    alert("Admin login successful!");
-  } else {
-    alert("Incorrect password!");
-  }
+if(sessionStorage.getItem("admin")==="true"){
+document.getElementById("adminPanel").style.display="block";
+document.getElementById("loginBox").style.display="none";
+document.getElementById("adminContent").style.display="block";
 }
 
-/* SAVE SETTINGS */
-function validateLink(link){return link && link.startsWith("https://");}
+function addNotice(){
+let text=document.getElementById("newNotice").value;
+if(!text)return;
+notices.push(text);
+renderNotices();
+document.getElementById("newNotice").value="";
+}
+
+function renderNotices(){
+let board=document.getElementById("noticeBoard");
+board.innerHTML="";
+notices.forEach(n=>{
+board.innerHTML+=`<div class="notice-item">${n}</div>`;
+});
+}
+
+function searchStudent(){
+fetch(studentCSV)
+.then(res=>res.text())
+.then(data=>{
+let rows=data.split("\n");
+let input=document.getElementById("studentInput").value.toLowerCase();
+let result="";
+rows.forEach(r=>{
+if(r.toLowerCase().includes(input)) result+=`<div class="notice-item">${r}</div>`;
+});
+document.getElementById("studentResults").innerHTML=result||"No record found";
+});
+}
+
 function saveSettings(){
-  let s=document.getElementById("scheduleInput").value;
-  let d=document.getElementById("diplomaInput").value;
-  let g=document.getElementById("degreeInput").value;
-  if(!validateLink(s)||!validateLink(d)||!validateLink(g)){alert("Invalid link format"); return;}
-  showLoading();
-  fetch(scriptURL,{
-    method:"POST",
-    body:JSON.stringify({schedule:s,diploma:d,degree:g})
-  }).then(()=>{alert("Saved to Google Sheet Successfully"); loadSettings(); hideLoading();})
-    .catch(()=>{alert("Failed to save"); hideLoading();});
+alert("Settings saved (connect upload to Apps Script Drive for full automation)");
 }
 
-/* PDF VIEWER */
-function openPDF(link){
-  if(!validateLink(link)){alert("Invalid link"); return;}
-  document.getElementById("pdfFrame").src=link;
-  document.getElementById("pdfModal").style.display="flex";
+function toggleLang(){
+let footer=document.getElementById("footerText");
+if(footer.innerHTML.includes("GOOD")){
+footer.innerHTML="SELAMAT MAJU JAYA!<br>Semoga segala usaha anda selama ini membuahkan kejayaan.<br>Teruskan berusaha dan jangan putus asa!";
+}else{
+footer.innerHTML="GOOD LUCK!<br>May your efforts bring success.<br>Keep striving and never give up!";
 }
-function closeModal(){document.getElementById("pdfModal").style.display="none";}
-
+}
 toggleLang();
 </script>
+
 </body>
 </html>
