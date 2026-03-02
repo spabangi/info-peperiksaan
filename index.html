@@ -1,24 +1,194 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Student Exam Portal</title>
-  <link rel="stylesheet" href="style.css">
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background-color: #121212; color: #e0e0e0; padding: 20px; }
+  .container { max-width: 1000px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .dept { text-align: center; color: #bb86fc; font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; }
+  h2 { text-align: center; color: #03dac6; margin-top: 0; margin-bottom: 25px; }
+  
+  .search-box { margin-bottom: 30px; text-align: center; }
+  input { width: 85%; max-width: 500px; padding: 15px; border-radius: 30px; border: 2px solid #3700b3; background: #262626; color: white; font-size: 16px; text-align: center; transition: 0.3s; }
+  input:focus { border-color: #03dac6; outline: none; box-shadow: 0 0 15px rgba(3, 218, 198, 0.3); }
+  
+  .instruction { color: #aaa; font-size: 14px; margin-bottom: 10px; }
+  
+  .table-wrapper { overflow-x: auto; margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; display: none; animation: fadeIn 0.4s ease-in-out; }
+  th { background: #3700b3; color: white; padding: 15px; text-align: left; font-size: 13px; text-transform: uppercase; }
+  td { padding: 15px; border-bottom: 1px solid #333; font-size: 14px; }
+  tr:hover { background: #2a2a2a; }
+  
+  .print-area { text-align: center; margin-top: 30px; display: none; }
+  .main-print-btn { background: #03dac6; color: #000; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+  .main-print-btn:hover { background: #018786; color: white; transform: translateY(-2px); }
+
+  #no-results { display: none; text-align: center; color: #cf6679; padding: 20px; border: 1px dashed #cf6679; border-radius: 8px; }
+  #loader { text-align: center; color: #03dac6; display: block; padding: 10px; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Student Exam Portal</h1>
-  </header>
 
-  <section>
-    <h2>Download Exam Documents</h2>
-    <ul>
-<a href="full_exam_schedule.pdf" target="_blank">Full Exam Schedule</a>
-<a href="diploma_exam.pdf" target="_blank">Diploma Exam PDF</a>
-<a href="degree_exam.pdf" target="_blank">Degree Exam PDF</a>
-    </ul>
+<div class="container">
+  <div class="dept">SEKSYEN PERKHIDMATAN AKADEMIK KPTM BANGI</div>
+  <h2>Portal Semakan Meja / Exam Seating Portal</h2>
+  
+  <div class="search-box">
+    <p class="instruction">Enter Student Name or ID to view seating details:<br><i>Sila masukkan Nama atau ID Pelajar untuk semakan:</i></p>
+    <input type="text" id="srch" onkeyup="handleSearch()" placeholder="Search Name or ID...">
+  </div>
 
-    <a class="btn" href="search.html">Search Student Exam Info</a>
-  </section>
+  <div id="loader">Syncing with database...</div>
+  <div id="no-results">No matching record found. / Rekod tidak ditemui.</div>
+  
+  <div class="table-wrapper">
+    <table id="tbl">
+      <thead id="h"></thead>
+      <tbody id="b"></tbody>
+    </table>
+  </div>
+
+  <div class="print-area" id="printArea">
+    <button class="main-print-btn" onclick="printAllMatches()">🖨️ CETAK SLIP PEPERIKSAAN</button>
+  </div>
+</div>
+
+<script>
+  const url = "https://script.google.com/macros/s/AKfycbx-S-LMjLa-1_XUNe3T-LrJ4kG9nGzYKKS7DESYqxNDYzjx0i5L51T97dQBWjYLgYBUfA/exec"; 
+  let database = [];
+  let headers = [];
+  let currentResults = [];
+
+  // Helper function to format dates to dd/mm/yyyy
+  function formatDate(val) {
+    if (typeof val === 'string' && val.includes('T')) {
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) {
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+    }
+    return val;
+  }
+
+  async function preloadData() {
+    try {
+      const response = await fetch(url);
+      const rawData = await response.json();
+      
+      // Process data to fix date formats immediately
+      database = rawData.map(row => row.map(cell => formatDate(cell)));
+      headers = database[0];
+      
+      document.getElementById('loader').style.display = 'none';
+    } catch (err) {
+      document.getElementById('loader').innerHTML = "⚠️ Connection Error. Please refresh.";
+    }
+  }
+
+  function handleSearch() {
+    const query = document.getElementById('srch').value.trim().toUpperCase();
+    const table = document.getElementById('tbl');
+    const noResults = document.getElementById('no-results');
+    const printArea = document.getElementById('printArea');
+    const head = document.getElementById('h');
+    const body = document.getElementById('b');
+
+    if (query.length < 3) { 
+      table.style.display = 'none';
+      printArea.style.display = 'none';
+      noResults.style.display = 'none';
+      return;
+    }
+
+    currentResults = database.slice(1).filter(row => {
+      return row.some(cell => cell.toString().toUpperCase().includes(query));
+    });
+
+    if (currentResults.length > 0) {
+      head.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+      body.innerHTML = currentResults.map(row => 
+        `<tr>${row.map(c => `<td>${c}</td>`).join('')}</tr>`
+      ).join('');
+      
+      table.style.display = 'table';
+      printArea.style.display = 'block';
+      noResults.style.display = 'none';
+    } else {
+      table.style.display = 'none';
+      printArea.style.display = 'none';
+      noResults.style.display = 'block';
+    }
+  }
+
+  function printAllMatches() {
+    if (currentResults.length === 0) return;
+    const printWindow = window.open('', '_blank');
+    
+    let studentInfo = `<p><strong>Student Name:</strong> ${currentResults[0][0]}<br><strong>Student ID:</strong> ${currentResults[0][1]}</p>`;
+
+    let tableRows = currentResults.map(result => {
+        return `<tr>${result.map(cell => `<td style="border: 1px solid #000; padding: 8px;">${cell}</td>`).join('')}</tr>`;
+    }).join('');
+
+    let tableHeaders = headers.map(h => `<th style="border: 1px solid #000; padding: 8px; background: #f2f2f2;">${h}</th>`).join('');
+
+    // Fixed Logo URL for Google Drive embed
+    const logoUrl = "https://lh3.googleusercontent.com/d/1tQ_WdTSz-7Bvub3euZR5A7zNWeC_idiU";
+
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>Exam Slip - ${currentResults[0][0]}</title>
+        <style>
+          @page { margin: 0; }
+          body { font-family: sans-serif; padding: 1.5cm; color: #000; }
+          .border-box { border: 2px solid #000; padding: 20px; }
+          .header-container { display: flex; align-items: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+          .logo { width: 80px; height: auto; margin-right: 20px; }
+          .header-text { flex-grow: 1; text-align: center; }
+          .header-text h3, .header-text h2, .header-text p { margin: 2px 0; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+          .footer { margin-top: 40px; text-align: center; border-top: 1px solid #ccc; padding-top: 15px; font-size: 14px; }
+        </style>
+      </head>
+      <body>
+        <div class="border-box">
+          <div class="header-container">
+            <img src="${logoUrl}" class="logo" alt="Logo">
+            <div class="header-text">
+              <h3>KPTM BANGI</h3>
+              <h2>SLIP SEMAKAN MEJA PEPERIKSAAN</h2>
+              <p>SEKSYEN PERKHIDMATAN AKADEMIK</p>
+            </div>
+          </div>
+          ${studentInfo}
+          <table>
+            <thead><tr>${tableHeaders}</tr></thead>
+            <tbody>${tableRows}</tbody>
+          </table>
+          <div class="footer">
+            <p><strong>Best of luck!</strong><br>May all your efforts so far bear success.<br>Keep striving and never give up!</p>
+            <p style="font-size:10px; color:#555;">Copyright © SSG 2026. All rights reserved.</p>
+          </div>
+        </div>
+        <script>
+          window.onload = function() { 
+            window.print(); 
+            setTimeout(() => { window.close(); }, 200);
+          };
+        <\/script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+
+  window.onload = preloadData;
+</script>
 </body>
 </html>
